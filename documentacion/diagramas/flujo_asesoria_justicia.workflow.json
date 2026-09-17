@@ -1,0 +1,160 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Conformación del Expediente y Desglose de Clasificación",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "flujo-completo",
+        "label": "Flujo Completo Ventanilla a Dirección",
+        "focus": ["ciudadano", "registro", "filtro_competencia", "clasificacion", "dictamen", "matriz_stats"],
+        "note": "Ruta integral: comparecencia, captura de datos, clasificación, auditoría y balance."
+      },
+      {
+        "id": "ruta-no-compete",
+        "label": "Árbol D-1: Descarte No Compete",
+        "focus": ["registro", "filtro_competencia", "no_compete", "matriz_stats"],
+        "note": "Filtro de jurisdicción: bloqueo automático RN-01 y cómputo de descarte."
+      },
+      {
+        "id": "etapa-direccion",
+        "label": "Árbol D-2: Supervisión y Dictamen",
+        "focus": ["dictamen", "matriz_stats"],
+        "note": "Ficha provincial: rectificación fáctica, asignación de Vía de Solución y Estado."
+      }
+    ],
+    "output": "flujo_asesoria_justicia.html"
+  },
+  "lanes": [
+    { "id": "ventanilla", "label": "Atención al Ciudadano (Ventanilla)" },
+    { "id": "competencia", "label": "Control de Jurisdicción y Reglas", "variant": "exception" },
+    { "id": "direccion", "label": "Dirección Provincial (Auditoría y Dictamen)" },
+    { "id": "estadistica", "label": "Matriz Estadística Provincial" }
+  ],
+  "phases": [
+    { "id": "fase_atencion", "label": "Etapa 1: Captura Fáctica", "fromCol": 0, "toCol": 1 },
+    { "id": "fase_filtro", "label": "Filtro de Competencia", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "fase_direccion", "label": "Etapa 2: Dictamen (D-2/D-4)", "fromCol": 4, "toCol": 4, "variant": "emphasis" },
+    { "id": "fase_balance", "label": "Balance Estadístico", "fromCol": 5, "toCol": 5, "variant": "dashed" }
+  ],
+  "groups": [
+    { "id": "grp_recepcion", "label": "Ingreso de caso", "lane": "ventanilla", "fromCol": 0, "toCol": 1 },
+    { "id": "grp_descarte", "label": "Descarte automático", "lane": "competencia", "fromCol": 2, "toCol": 3, "variant": "security" },
+    { "id": "grp_resolucion", "label": "Resolución institucional", "lane": "direccion", "fromCol": 4, "toCol": 4, "variant": "emphasis" }
+  ],
+  "mainPath": ["ciudadano", "registro", "filtro_competencia", "clasificacion", "dictamen", "matriz_stats"],
+  "nodes": [
+    {
+      "id": "ciudadano",
+      "lane": "ventanilla",
+      "col": 0,
+      "type": "external",
+      "label": "Ciudadano",
+      "sublabel": "Comparecencia física",
+      "width": 132
+    },
+    {
+      "id": "registro",
+      "lane": "ventanilla",
+      "col": 1,
+      "type": "frontend",
+      "label": "Formulario Inicial",
+      "sublabel": "No. Exp y Fundamentos",
+      "tag": "Regla RN-02",
+      "width": 132
+    },
+    {
+      "id": "filtro_competencia",
+      "lane": "competencia",
+      "col": 2,
+      "type": "security",
+      "label": "¿Es Competente?",
+      "sublabel": "Evaluación legal",
+      "tag": "Decisión D-1",
+      "width": 132
+    },
+    {
+      "id": "no_compete",
+      "lane": "competencia",
+      "col": 3,
+      "type": "backend",
+      "label": "Caso No Compete",
+      "sublabel": "Bloqueo de Materia/Vía",
+      "tag": "Regla RN-01",
+      "width": 132
+    },
+    {
+      "id": "clasificacion",
+      "lane": "ventanilla",
+      "col": 3,
+      "type": "frontend",
+      "label": "Clasificación",
+      "sublabel": "5 Materias + 5 Vulnerab.",
+      "width": 132
+    },
+    {
+      "id": "dictamen",
+      "lane": "direccion",
+      "col": 4,
+      "type": "security",
+      "label": "Auditoría & Dictamen",
+      "sublabel": "4 Vías y Estado Final",
+      "tag": "Solo Dirección",
+      "width": 132
+    },
+    {
+      "id": "matriz_stats",
+      "lane": "estadistica",
+      "col": 5,
+      "type": "database",
+      "label": "Matriz Estadística",
+      "sublabel": "Consolidación en Vivo",
+      "tag": "20 Cols x 13 Filas",
+      "width": 132
+    }
+  ],
+  "edges": [
+    { "id": "e_atencion", "from": "ciudadano", "to": "registro", "variant": "default" },
+    { "id": "e_evaluar", "from": "registro", "to": "filtro_competencia", "label": "Evalúa", "variant": "emphasis" },
+    { "id": "e_compete_si", "from": "filtro_competencia", "to": "clasificacion", "label": "Sí compete", "variant": "emphasis" },
+    { "id": "e_compete_no", "from": "filtro_competencia", "to": "no_compete", "label": "No compete", "variant": "security", "role": "error" },
+    { "id": "e_envio_dictamen", "from": "clasificacion", "to": "dictamen", "label": "Envío provincial", "variant": "emphasis" },
+    { "id": "e_no_compete_stats", "from": "no_compete", "to": "matriz_stats", "label": "Computa descarte", "variant": "dashed", "role": "branch" },
+    { "id": "e_impacto_stats", "from": "dictamen", "to": "matriz_stats", "label": "Impacto en celdas", "variant": "emphasis" }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Desglose de las 5 Materias Jurídicas (Cols 3 a 7)",
+      "items": [
+        "Civil: Propiedad, sucesiones hereditarias, contratos y obligaciones.",
+        "Familiar: Código de las Familias (alimentos, guarda y cuidado, divorcio).",
+        "Trabajo y Seg. Social: Conflictos laborales, pensiones por edad e invalidez.",
+        "Mercantil: Nuevos actores (MIPYMES, CNA) y contratos comerciales.",
+        "Administrativo: Trámites de Vivienda, Carné de Identidad, Planificación Física."
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Desglose de las 5 Vulnerabilidades Sociales (Cols 8 a 12)",
+      "items": [
+        "NNA: Niño, Niña y Adolescente (< 18 años, protección prioritaria de derechos).",
+        "VVD: Víctima de Violencia y Discriminación (género, intrafamiliar, racial).",
+        "PAM: Persona Adulto Mayor (60 años o más en situación de indefensión).",
+        "PSD: Persona en Situación de Discapacidad (física, sensorial o intelectual).",
+        "PJA: Persona Jurídico Ausente (titular fuera del país o paradero ignorado)."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Dictamen de Dirección y Consistencia en Matriz (Cols 13 a 20)",
+      "items": [
+        "4 Vías: Proceso Judicial, Notarial, Administrativo y Métodos Alternos.",
+        "3 Estados: Resuelto (orientación concluida), No Resuelto y No Compete.",
+        "Cuadre inexpugnable: Total Casos = Total Competentes + No Compete."
+      ]
+    }
+  ]
+}

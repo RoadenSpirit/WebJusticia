@@ -1,0 +1,176 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Conformación del Expediente y Desglose de Clasificación",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "flujo-clasificacion",
+        "label": "Desglose Completo de Clasificación",
+        "focus": ["ciudadano", "registro", "filtro_competencia", "materias", "vulnerabilidades", "dictamen", "matriz_stats"],
+        "note": "Apertura en dos vías de clasificación: 5 Materias Jurídicas y 5 Vulnerabilidades Sociales."
+      },
+      {
+        "id": "ruta-descarte",
+        "label": "Ruta de Descarte No Compete",
+        "focus": ["registro", "filtro_competencia", "caso_no_compete", "dictamen", "matriz_stats"],
+        "note": "Bloqueo RN-01: Materia y Vulnerabilidad a NULL, Estado fijado a 'No Compete'."
+      },
+      {
+        "id": "etapa-direccion",
+        "label": "Dictamen de Dirección y Matriz",
+        "focus": ["materias", "vulnerabilidades", "dictamen", "matriz_stats"],
+        "note": "Asignación obligatoria de las 4 Vías de Solución y calificación del Estado."
+      }
+    ],
+    "output": "desglose_clasificacion_expediente.html"
+  },
+  "lanes": [
+    { "id": "ventanilla", "label": "Atención al Ciudadano (Ventanilla)" },
+    { "id": "clasificacion_mat", "label": "Clasificación por Materias Jurídicas" },
+    { "id": "clasificacion_vuln", "label": "Clasificación por Vulnerabilidad Social" },
+    { "id": "direccion", "label": "Dirección Provincial (Auditoría y Dictamen)" },
+    { "id": "estadistica", "label": "Matriz Estadística Provincial (20 Cols)" }
+  ],
+  "phases": [
+    { "id": "fase_captura", "label": "Etapa 1: Captura Fáctica", "fromCol": 0, "toCol": 1 },
+    { "id": "fase_filtro", "label": "Filtro D-1", "fromCol": 2, "toCol": 2, "variant": "emphasis" },
+    { "id": "fase_clasificacion", "label": "Desglose Clasificación", "fromCol": 3, "toCol": 3, "variant": "emphasis" },
+    { "id": "fase_direccion", "label": "Etapa 2: Dictamen", "fromCol": 4, "toCol": 4, "variant": "emphasis" },
+    { "id": "fase_matriz", "label": "Matriz Estadística", "fromCol": 5, "toCol": 5, "variant": "dashed" }
+  ],
+  "groups": [
+    { "id": "grp_intake", "label": "Ingreso y fáctico", "lane": "ventanilla", "fromCol": 0, "toCol": 2 },
+    { "id": "grp_materias", "label": "Ramas sustantivas", "lane": "clasificacion_mat", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "grp_vulnerabilidad", "label": "Condición social", "lane": "clasificacion_vuln", "fromCol": 3, "toCol": 3, "variant": "security" },
+    { "id": "grp_resolucion", "label": "Supervisión provincial", "lane": "direccion", "fromCol": 4, "toCol": 4, "variant": "emphasis" }
+  ],
+  "mainPath": ["ciudadano", "registro", "filtro_competencia", "materias", "dictamen", "matriz_stats"],
+  "nodes": [
+    {
+      "id": "ciudadano",
+      "lane": "ventanilla",
+      "col": 0,
+      "type": "external",
+      "label": "Ciudadano",
+      "sublabel": "Comparecencia física",
+      "width": 132
+    },
+    {
+      "id": "registro",
+      "lane": "ventanilla",
+      "col": 1,
+      "type": "frontend",
+      "label": "Formulario Inicial",
+      "sublabel": "No. Exp y Fundamentos",
+      "tag": "Regla RN-02",
+      "width": 132
+    },
+    {
+      "id": "filtro_competencia",
+      "lane": "ventanilla",
+      "col": 2,
+      "type": "security",
+      "label": "¿Es Competente?",
+      "sublabel": "Evaluación legal",
+      "tag": "Decisión D-1",
+      "width": 132
+    },
+    {
+      "id": "caso_no_compete",
+      "lane": "clasificacion_mat",
+      "col": 2,
+      "type": "backend",
+      "label": "Caso No Compete",
+      "sublabel": "Bloqueo Materia/Vía",
+      "tag": "Regla RN-01",
+      "width": 132
+    },
+    {
+      "id": "materias",
+      "lane": "clasificacion_mat",
+      "col": 3,
+      "type": "database",
+      "label": "5 Materias",
+      "sublabel": "Civil,Fam,Lab,Merc,Adm",
+      "tag": "Cols 3 a 7",
+      "width": 132
+    },
+    {
+      "id": "vulnerabilidades",
+      "lane": "clasificacion_vuln",
+      "col": 3,
+      "type": "database",
+      "label": "5 Vulnerabilidades",
+      "sublabel": "NNA,VVD,PAM,PSD,PJA",
+      "tag": "Cols 8 a 12",
+      "width": 132
+    },
+    {
+      "id": "dictamen",
+      "lane": "direccion",
+      "col": 4,
+      "type": "security",
+      "label": "Auditoría & Dictamen",
+      "sublabel": "Vía Solución y Estado",
+      "tag": "Solo Dirección",
+      "width": 132
+    },
+    {
+      "id": "matriz_stats",
+      "lane": "estadistica",
+      "col": 5,
+      "type": "database",
+      "label": "Matriz Estadística",
+      "sublabel": "Consolidación en Vivo",
+      "tag": "20 Cols x 13 Filas",
+      "width": 132
+    }
+  ],
+  "edges": [
+    { "id": "e_ciudadano", "from": "ciudadano", "to": "registro", "variant": "default" },
+    { "id": "e_evaluar", "from": "registro", "to": "filtro_competencia", "label": "Evalúa D-1", "variant": "emphasis" },
+    { "id": "e_descarte", "from": "filtro_competencia", "to": "caso_no_compete", "label": "No compete", "variant": "security", "role": "error" },
+    { "id": "e_materia", "from": "filtro_competencia", "to": "materias", "label": "Sí: Materia", "variant": "emphasis" },
+    { "id": "e_vuln", "from": "filtro_competencia", "to": "vulnerabilidades", "label": "Sí: Vulnerabilidad", "variant": "emphasis" },
+    { "id": "e_no_compete_dir", "from": "caso_no_compete", "to": "dictamen", "label": "Envío descarte", "variant": "dashed", "role": "branch" },
+    { "id": "e_materia_dir", "from": "materias", "to": "dictamen", "label": "Dictamina Vía", "variant": "emphasis" },
+    { "id": "e_vuln_dir", "from": "vulnerabilidades", "to": "dictamen", "label": "Dictamina Estado", "variant": "emphasis" },
+    { "id": "e_dictamen_matriz", "from": "dictamen", "to": "matriz_stats", "label": "Impacto en celdas", "variant": "emphasis" }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Desglose de las 5 Materias Jurídicas (Cols 3 a 7)",
+      "items": [
+        "Civil: Propiedad, obligaciones, contratos y sucesiones hereditarias.",
+        "Familiar: Código de las Familias (alimentos, guarda y cuidado, divorcio).",
+        "Trabajo y Seg. Social: Conflictos laborales, pensiones por edad e invalidez.",
+        "Mercantil: Nuevos actores (MIPYMES, CNA) y contratos comerciales.",
+        "Administrativo: Vivienda, Carné de Identidad y Planificación Física."
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Desglose de las 5 Vulnerabilidades Sociales (Cols 8 a 12)",
+      "items": [
+        "NNA: Niño, Niña y Adolescente (< 18 años, derechos protegidos).",
+        "VVD: Víctima de Violencia y Discriminación (género, intrafamiliar).",
+        "PAM: Persona Adulto Mayor (60 años o más en indefensión).",
+        "PSD: Persona en Situación de Discapacidad (física o intelectual).",
+        "PJA: Persona Jurídico Ausente (titular fuera del territorio nacional)."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Dictamen de Dirección y Consistencia Matemática",
+      "items": [
+        "4 Vías: Proceso Judicial, Notarial, Administrativo y Métodos Alternos.",
+        "3 Estados: Resuelto, No Resuelto y No Compete.",
+        "Cuadre inexpugnable: Total Casos = Total Competentes + No Compete."
+      ]
+    }
+  ]
+}

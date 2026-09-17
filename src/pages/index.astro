@@ -1,0 +1,1751 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="SIAC-JUS | Dirección Provincial de Justicia de Camagüey">
+	<!-- APLICACIÓN PRINCIPAL -->
+	<div id="app" class="min-h-screen flex flex-col bg-slate-100 text-slate-800 font-sans">
+		
+		<!-- ==================== CINTILLO GUBERNAMENTAL SUPERIOR ==================== -->
+		<div class="bg-slate-950 text-slate-300 text-[11px] py-1.5 px-4 sm:px-6 border-b border-slate-800 flex items-center justify-between tracking-wide">
+			<div class="flex items-center gap-2">
+				<span class="font-bold text-white uppercase tracking-wider">República de Cuba</span>
+				<span class="text-slate-500">•</span>
+				<span class="text-slate-300">Ministerio de Justicia (MINJUS)</span>
+			</div>
+			<div class="hidden sm:flex items-center gap-3 text-slate-400 text-[10px]">
+				<span>Sede Provincial de Camagüey</span>
+				<span class="text-slate-600">•</span>
+				<span id="fecha-oficial-hoy"></span>
+			</div>
+		</div>
+
+		<!-- ==================== PANTALLA 1: ACCESO (LOGIN INSTITUCIONAL) ==================== -->
+		<div id="view-login" class="min-h-[calc(100vh-32px)] flex items-center justify-center p-4 bg-gradient-to-b from-slate-900 via-[#0c2038] to-[#071526]">
+			<div class="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden">
+				<!-- Cabecera de Login -->
+				<div class="bg-[#0f2744] px-8 py-8 text-white text-center border-b border-slate-700/80 relative">
+					<div class="w-16 h-16 bg-[#183c66] rounded-2xl border border-blue-400/20 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-black/30 text-3xl">
+						⚖️
+					</div>
+					<h1 class="text-lg font-extrabold tracking-tight text-white uppercase">Dirección Provincial de Justicia</h1>
+					<p class="text-xs text-blue-200/90 font-medium mt-1">Provincia de Camagüey</p>
+					<div class="mt-3 inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-blue-500/20 text-blue-200 border border-blue-400/30">
+						SIAC-JUS • Módulo Estadístico
+					</div>
+				</div>
+
+				<!-- Formulario -->
+				<form id="form-login" class="p-8 space-y-5">
+					<div id="login-error" class="hidden p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2">
+						<span>⚠️</span>
+						<span>Credenciales incorrectas. Verifique el usuario y contraseña.</span>
+					</div>
+
+					<div>
+						<label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+							Funcionario / Usuario
+						</label>
+						<input
+							type="text"
+							id="login-username"
+							placeholder="Directora o Personal"
+							required
+							autocomplete="username"
+							class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-[#0f2744] focus:border-[#0f2744] outline-none transition bg-slate-50 focus:bg-white"
+						/>
+					</div>
+
+					<div>
+						<label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+							Contraseña Institucional
+						</label>
+						<input
+							type="password"
+							id="login-password"
+							placeholder="••••••••••••"
+							required
+							autocomplete="current-password"
+							class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-[#0f2744] focus:border-[#0f2744] outline-none transition bg-slate-50 focus:bg-white"
+						/>
+					</div>
+
+					<button
+						type="submit"
+						class="w-full py-2.5 px-4 rounded-lg bg-[#0f2744] hover:bg-[#16365c] active:bg-[#0c1f36] text-white font-bold text-sm shadow-md transition duration-150 flex items-center justify-center gap-2"
+					>
+						<span>Ingresar al Sistema</span>
+						<span>→</span>
+					</button>
+
+					<!-- Accesos directos de demostración -->
+					<div class="pt-4 border-t border-slate-100 space-y-2.5">
+						<p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">
+							Accesos Rápidos para Demostración Oficial
+						</p>
+						<div class="grid grid-cols-2 gap-2">
+							<button
+								type="button"
+								id="btn-demo-directora"
+								class="px-3 py-2 text-xs font-bold rounded-lg bg-indigo-50 text-indigo-900 border border-indigo-200 hover:bg-indigo-100 transition text-center flex items-center justify-center gap-1.5"
+							>
+								<span>👩‍⚖️</span> Directora
+							</button>
+							<button
+								type="button"
+								id="btn-demo-personal"
+								class="px-3 py-2 text-xs font-bold rounded-lg bg-slate-100 text-slate-800 border border-slate-200 hover:bg-slate-200 transition text-center flex items-center justify-center gap-1.5"
+							>
+								<span>📋</span> Ventanilla
+							</button>
+						</div>
+						<p class="text-[10px] text-slate-400 text-center font-mono">
+							Contraseña: <strong>ASDasd123</strong>
+						</p>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<!-- ==================== PANTALLA PRINCIPAL DEL SISTEMA ==================== -->
+		<div id="view-dashboard" class="hidden flex-1 flex flex-col">
+			
+			<!-- HEADER INSTITUCIONAL -->
+			<header class="bg-[#0f2744] text-white border-b border-slate-800 sticky top-0 z-30 shadow-md">
+				<div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+					<div class="flex items-center gap-3">
+						<div class="w-10 h-10 rounded-xl bg-[#1a3a60] border border-blue-400/30 flex items-center justify-center font-bold text-xl text-white shadow">
+							⚖️
+						</div>
+						<div>
+							<div class="flex items-center gap-2">
+								<h2 class="font-extrabold text-sm sm:text-base tracking-tight leading-tight">Web Estadística Justicia</h2>
+								<span id="role-badge" class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wide"></span>
+							</div>
+							<p class="text-[11px] text-blue-200">Dirección Provincial de Justicia de Camagüey</p>
+						</div>
+					</div>
+
+					<div class="flex items-center gap-3">
+						<div class="hidden sm:block text-right">
+							<p id="user-display-name" class="text-xs font-bold text-slate-100"></p>
+							<p id="user-display-role" class="text-[10px] text-blue-300"></p>
+						</div>
+						<button
+							id="btn-logout"
+							class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-semibold border border-slate-600 transition flex items-center gap-1.5"
+						>
+							<span>🚪</span> Cerrar Sesión
+						</button>
+					</div>
+				</div>
+
+				<!-- BARRA DE NAVEGACIÓN POR PESTAÑAS (SOLO 4 PESTAÑAS - DOCUMENTACIÓN ELIMINADA) -->
+				<div class="bg-[#09192c] border-t border-slate-700/60 px-4 sm:px-6">
+					<nav class="max-w-7xl mx-auto flex space-x-1 sm:space-x-2 overflow-x-auto py-1" id="main-nav">
+						<button
+							data-tab="tab-registro"
+							class="nav-tab px-3.5 py-2 text-xs font-bold rounded-md transition text-slate-300 hover:text-white flex items-center gap-2"
+						>
+							<span>📝</span> Registrar Comparecencia
+						</button>
+						<button
+							data-tab="tab-expedientes"
+							class="nav-tab px-3.5 py-2 text-xs font-bold rounded-md transition text-slate-300 hover:text-white flex items-center gap-2"
+						>
+							<span>📂</span> Expedientes Radicados
+						</button>
+						<button
+							data-tab="tab-auditoria"
+							id="nav-tab-auditoria"
+							class="nav-tab px-3.5 py-2 text-xs font-bold rounded-md transition text-slate-300 hover:text-white flex items-center gap-2"
+						>
+							<span>⚖️</span> Bandeja de Auditoría Provincial
+							<span id="badge-pendientes-count" class="px-1.5 py-0.2 rounded-full text-[10px] font-extrabold bg-amber-500 text-slate-950">0</span>
+						</button>
+						<button
+							data-tab="tab-matriz"
+							id="nav-tab-matriz"
+							class="nav-tab px-3.5 py-2 text-xs font-bold rounded-md transition text-slate-300 hover:text-white flex items-center gap-2"
+						>
+							<span>📊</span> Matriz Estadística Anual (20 Col)
+						</button>
+					</nav>
+				</div>
+			</header>
+
+			<!-- CONTENIDO PRINCIPAL DE PESTAÑAS -->
+			<main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6">
+				
+				<!-- ==================== PESTAÑA 1: FORMULARIO DE REGISTRO ==================== -->
+				<section id="tab-registro" class="tab-pane space-y-6">
+					<div class="bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-slate-200">
+						
+						<!-- Encabezado de Acta Oficial -->
+						<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-200 gap-2 mb-6">
+							<div>
+								<div class="flex items-center gap-2">
+									<span class="text-blue-900 font-bold text-xs uppercase tracking-widest bg-blue-50 px-2.5 py-1 rounded border border-blue-200">
+										Acta Oficial de Comparecencia
+									</span>
+								</div>
+								<h3 class="text-xl font-black text-slate-900 mt-1">Recepción y Radicación de Asesoría Jurídica</h3>
+								<p class="text-xs text-slate-500">Formulario normativo de atención ciudadana (Regla Técnica RN-02)</p>
+							</div>
+							<div class="text-right">
+								<span class="text-xs font-mono font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 inline-block" id="label-reloj-atencion">
+									Horario Oficial
+								</span>
+							</div>
+						</div>
+
+						<form id="form-nuevo-expediente" class="space-y-6">
+							
+							<!-- I. DATOS DE RADICACIÓN -->
+							<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50/80 p-4 rounded-xl border border-slate-200">
+								<div>
+									<label class="block text-[11px] font-extrabold text-slate-700 uppercase tracking-wider mb-1">
+										No. de Expediente (Único)
+									</label>
+									<input
+										type="text"
+										id="case-no"
+										readonly
+										class="w-full px-3 py-2 bg-slate-200 text-slate-900 font-mono font-extrabold text-sm rounded-lg border border-slate-300 outline-none cursor-not-allowed tracking-wider"
+									/>
+									<p class="text-[10px] text-slate-500 mt-1">Consecutivo ministerial automático</p>
+								</div>
+
+								<div>
+									<label class="block text-[11px] font-extrabold text-slate-700 uppercase tracking-wider mb-1">
+										Fecha de Atención
+									</label>
+									<input
+										type="date"
+										id="case-date"
+										required
+										class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-[#0f2744] outline-none font-medium"
+									/>
+								</div>
+
+								<div>
+									<label class="block text-[11px] font-extrabold text-slate-700 uppercase tracking-wider mb-1">
+										Especialista que Atiende
+									</label>
+									<input
+										type="text"
+										id="case-responsable"
+										required
+										class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-[#0f2744] outline-none font-medium"
+									/>
+								</div>
+							</div>
+
+							<!-- II. GENERALES DEL COMPARECIENTE -->
+							<div class="space-y-3">
+								<h4 class="text-xs font-black text-[#0f2744] uppercase tracking-wider flex items-center gap-1.5 border-b border-slate-100 pb-1">
+									<span>👤</span> I. Generales del Ciudadano Compareciente
+								</h4>
+
+								<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+									<div class="sm:col-span-1">
+										<label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">
+											Nombre y Apellidos <span class="text-rose-600">*</span>
+										</label>
+										<input
+											type="text"
+											id="case-ciudadano-nombre"
+											placeholder="Ej. Juan Pérez Martínez"
+											required
+											class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-[#0f2744] outline-none"
+										/>
+									</div>
+									<div>
+										<label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">
+											Carnet de Identidad (11 dígitos) <span class="text-rose-600">*</span>
+										</label>
+										<input
+											type="text"
+											id="case-ciudadano-ci"
+											placeholder="00000000000"
+											maxlength="11"
+											required
+											class="w-full px-3 py-2 text-sm font-mono tracking-widest rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-[#0f2744] outline-none"
+										/>
+									</div>
+									<div>
+										<label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">
+											Municipio de Residencia <span class="text-rose-600">*</span>
+										</label>
+										<select
+											id="case-ciudadano-municipio"
+											required
+											class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-[#0f2744] outline-none font-medium"
+										>
+											<option value="">Seleccione Municipio...</option>
+											<option value="Camagüey">Camagüey (Cabecera)</option>
+											<option value="Florida">Florida</option>
+											<option value="Nuevitas">Nuevitas</option>
+											<option value="Guáimaro">Guáimaro</option>
+											<option value="Carlos M. de Céspedes">Carlos M. de Céspedes</option>
+											<option value="Esmeralda">Esmeralda</option>
+											<option value="Jimaguayú">Jimaguayú</option>
+											<option value="Minas">Minas</option>
+											<option value="Najasa">Najasa</option>
+											<option value="Sibanicú">Sibanicú</option>
+											<option value="Santa Cruz del Sur">Santa Cruz del Sur</option>
+											<option value="Vertientes">Vertientes</option>
+											<option value="Sierra de Cubitas">Sierra de Cubitas</option>
+										</select>
+									</div>
+								</div>
+
+								<div>
+									<label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">
+										Fundamentos del Asunto Planteado (Hechos y Petición) <span class="text-rose-600">*</span>
+									</label>
+									<textarea
+										id="case-fundamentos"
+										rows="4"
+										required
+										placeholder="Relato circunstanciado de los hechos expuestos por el ciudadano, pretensión solicitada y documentos exhibidos en la comparecencia..."
+										class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-[#0f2744] outline-none leading-relaxed"
+									></textarea>
+								</div>
+							</div>
+
+							<!-- III. DETERMINACIÓN DE COMPETENCIA (INTERRUPTOR FUNCIONAL MEJORADO) -->
+							<div class="p-5 rounded-xl border-2 transition duration-200 bg-slate-50 border-slate-300" id="box-competencia">
+								<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+									<div>
+										<h4 class="text-sm font-extrabold text-[#0f2744] uppercase tracking-wider flex items-center gap-2">
+											<span>⚖️</span> II. Examen de Competencia Jurisdiccional (Regla RN-01)
+										</h4>
+										<p class="text-xs text-slate-600 mt-0.5">
+											Determine si el objeto de la comparecencia es competencia funcional del Ministerio de Justicia.
+										</p>
+									</div>
+									<!-- Botones Selector de Competencia -->
+									<div class="flex items-center gap-2 bg-slate-200/80 p-1.5 rounded-xl">
+										<button
+											type="button"
+											id="btn-compete-si"
+											class="px-5 py-2 rounded-lg text-xs font-extrabold uppercase tracking-wide transition shadow-sm bg-[#15803d] text-white"
+										>
+											✓ SÍ COMPETE
+										</button>
+										<button
+											type="button"
+											id="btn-compete-no"
+											class="px-5 py-2 rounded-lg text-xs font-extrabold uppercase tracking-wide transition text-slate-600 hover:text-slate-900"
+										>
+											✕ NO COMPETE
+										</button>
+									</div>
+								</div>
+
+								<!-- Alerta cuando No Compete -->
+								<div id="alert-no-compete" class="hidden mt-4 p-3.5 rounded-lg bg-amber-50 border border-amber-300 text-amber-900 text-xs">
+									<div class="flex items-start gap-2">
+										<span class="text-base leading-none">⚠️</span>
+										<div>
+											<strong class="font-extrabold">Descarte Jurisdiccional Automático (RN-01):</strong>
+											Este trámite no corresponde al Ministerio de Justicia. El expediente se archivará directamente con estado 
+											<span class="font-mono font-bold bg-amber-200/60 px-1.5 py-0.5 rounded">No Compete</span>.
+											Contabilizará en <em>Total Casos Atendidos</em> en la Matriz Estadística sin alterar las columnas de materias ni vías.
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- IV. ENCUADRAMIENTO JURÍDICO Y VULNERABILIDAD (BOTONES 100% FUNCIONALES) -->
+							<div id="seccion-clasificaciones" class="space-y-6">
+								
+								<!-- Selección de Materia -->
+								<div>
+									<div class="flex items-center justify-between mb-2">
+										<label class="block text-xs font-black text-[#0f2744] uppercase tracking-wider">
+											III. Materia Jurídica Aplicable <span class="text-rose-600">*</span>
+										</label>
+										<span class="text-[11px] text-slate-500 font-medium">Seleccione una de las 5 materias</span>
+									</div>
+
+									<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5" id="grid-materias">
+										<button
+											type="button"
+											data-materia="Civil"
+											class="btn-materia-card text-left p-3.5 rounded-xl border-2 transition flex flex-col justify-between h-full bg-slate-900 text-white border-slate-900 shadow-sm"
+										>
+											<span class="font-extrabold text-xs flex items-center gap-1.5">
+												<span>🏠</span> Civil
+											</span>
+											<span class="text-[10px] text-slate-300 mt-1.5 leading-snug">Viviendas, herencias, patrimonio y contratos civiles.</span>
+										</button>
+
+										<button
+											type="button"
+											data-materia="Familiar"
+											class="btn-materia-card text-left p-3.5 rounded-xl border-2 transition flex flex-col justify-between h-full bg-white text-slate-800 border-slate-200 hover:border-slate-400"
+										>
+											<span class="font-extrabold text-xs flex items-center gap-1.5">
+												<span>👨‍👩‍👧</span> Familiar
+											</span>
+											<span class="text-[10px] text-slate-500 mt-1.5 leading-snug">Código de las Familias, alimentos, guarda y divorcios.</span>
+										</button>
+
+										<button
+											type="button"
+											data-materia="Trabajo y Seguridad Social"
+											class="btn-materia-card text-left p-3.5 rounded-xl border-2 transition flex flex-col justify-between h-full bg-white text-slate-800 border-slate-200 hover:border-slate-400"
+										>
+											<span class="font-extrabold text-xs flex items-center gap-1.5">
+												<span>💼</span> Trabajo y Seg.
+											</span>
+											<span class="text-[10px] text-slate-500 mt-1.5 leading-snug">Conflictos laborales, pensiones por edad o invalidez.</span>
+										</button>
+
+										<button
+											type="button"
+											data-materia="Mercantil"
+											class="btn-materia-card text-left p-3.5 rounded-xl border-2 transition flex flex-col justify-between h-full bg-white text-slate-800 border-slate-200 hover:border-slate-400"
+										>
+											<span class="font-extrabold text-xs flex items-center gap-1.5">
+												<span>🏬</span> Mercantil
+											</span>
+											<span class="text-[10px] text-slate-500 mt-1.5 leading-snug">MIPYMES, cooperativas CNA y contratos comerciales.</span>
+										</button>
+
+										<button
+											type="button"
+											data-materia="Administrativo"
+											class="btn-materia-card text-left p-3.5 rounded-xl border-2 transition flex flex-col justify-between h-full bg-white text-slate-800 border-slate-200 hover:border-slate-400"
+										>
+											<span class="font-extrabold text-xs flex items-center gap-1.5">
+												<span>🏛️</span> Administrativo
+											</span>
+											<span class="text-[10px] text-slate-500 mt-1.5 leading-snug">Vivienda estatal, Planificación Física y Registro Civil.</span>
+										</button>
+									</div>
+								</div>
+
+								<!-- Selección de Vulnerabilidad -->
+								<div>
+									<div class="flex items-center justify-between mb-2">
+										<label class="block text-xs font-black text-[#0f2744] uppercase tracking-wider">
+											IV. Identificación de Vulnerabilidad Social <span class="text-rose-600">*</span>
+										</label>
+										<span class="text-[11px] text-slate-500 font-medium">Atención prioritaria según siglas oficiales</span>
+									</div>
+
+									<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5" id="grid-vulns">
+										<button
+											type="button"
+											data-vuln="NNA"
+											class="btn-vuln-card text-left p-3 rounded-xl border-2 transition flex flex-col justify-between h-full bg-white text-slate-800 border-slate-200 hover:border-slate-400"
+										>
+											<div class="flex items-center justify-between">
+												<span class="font-mono font-black text-xs text-blue-900 bg-blue-100 px-2 py-0.5 rounded">NNA</span>
+												<span class="text-[10px] text-slate-400">&lt; 18 años</span>
+											</div>
+											<span class="font-bold text-xs mt-1.5 text-slate-800">Niño, Niña, Adolescente</span>
+										</button>
+
+										<button
+											type="button"
+											data-vuln="VVD"
+											class="btn-vuln-card text-left p-3 rounded-xl border-2 transition flex flex-col justify-between h-full bg-white text-slate-800 border-slate-200 hover:border-slate-400"
+										>
+											<div class="flex items-center justify-between">
+												<span class="font-mono font-black text-xs text-rose-900 bg-rose-100 px-2 py-0.5 rounded">VVD</span>
+												<span class="text-[10px] text-slate-400">Protección</span>
+											</div>
+											<span class="font-bold text-xs mt-1.5 text-slate-800">Víctima Violencia / Disc.</span>
+										</button>
+
+										<button
+											type="button"
+											data-vuln="PAM"
+											class="btn-vuln-card text-left p-3 rounded-xl border-2 transition flex flex-col justify-between h-full bg-[#0f2744] text-white border-[#0f2744] shadow-sm"
+										>
+											<div class="flex items-center justify-between">
+												<span class="font-mono font-black text-xs text-amber-200 bg-white/20 px-2 py-0.5 rounded">PAM</span>
+												<span class="text-[10px] text-slate-300">≥ 60 años</span>
+											</div>
+											<span class="font-bold text-xs mt-1.5 text-white">Persona Adulto Mayor</span>
+										</button>
+
+										<button
+											type="button"
+											data-vuln="PSD"
+											class="btn-vuln-card text-left p-3 rounded-xl border-2 transition flex flex-col justify-between h-full bg-white text-slate-800 border-slate-200 hover:border-slate-400"
+										>
+											<div class="flex items-center justify-between">
+												<span class="font-mono font-black text-xs text-emerald-900 bg-emerald-100 px-2 py-0.5 rounded">PSD</span>
+												<span class="text-[10px] text-slate-400">Discapacidad</span>
+											</div>
+											<span class="font-bold text-xs mt-1.5 text-slate-800">Situación Discapacidad</span>
+										</button>
+
+										<button
+											type="button"
+											data-vuln="PJA"
+											class="btn-vuln-card text-left p-3 rounded-xl border-2 transition flex flex-col justify-between h-full bg-white text-slate-800 border-slate-200 hover:border-slate-400"
+										>
+											<div class="flex items-center justify-between">
+												<span class="font-mono font-black text-xs text-indigo-900 bg-indigo-100 px-2 py-0.5 rounded">PJA</span>
+												<span class="text-[10px] text-slate-400">Exterior</span>
+											</div>
+											<span class="font-bold text-xs mt-1.5 text-slate-800">Jurídico Ausente</span>
+										</button>
+									</div>
+								</div>
+
+							</div>
+
+							<!-- NOTA: LOS CAMPOS DE VÍA DE SOLUCIÓN Y ESTADO HAN SIDO COMPLETAMENTE ELIMINADOS DE LA VISTA DEL PERSONAL -->
+
+							<!-- Botón de Envío Oficial -->
+							<div class="pt-4 border-t border-slate-200 flex items-center justify-between">
+								<p class="text-[11px] text-slate-500">
+									Al guardar, el caso queda radicado y pasa automáticamente a la bandeja de auditoría provincial.
+								</p>
+								<button
+									type="submit"
+									class="px-7 py-3 rounded-xl bg-[#0f2744] hover:bg-[#183c66] active:bg-[#0c1f36] text-white font-extrabold text-xs uppercase tracking-wider shadow-lg shadow-black/20 flex items-center gap-2 transition"
+								>
+									<span>💾</span> Radicar y Enviar Expediente
+								</button>
+							</div>
+						</form>
+					</div>
+				</section>
+
+				<!-- ==================== PESTAÑA 2: EXPEDIENTES RADICADOS ==================== -->
+				<section id="tab-expedientes" class="tab-pane hidden space-y-4">
+					<div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 space-y-4">
+						<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-200">
+							<div>
+								<h3 class="text-lg font-black text-slate-900">Libro Digital de Expedientes Radicados</h3>
+								<p class="text-xs text-slate-500">Registro histórico inmutable de atenciones ciudadanas (Regla RN-03)</p>
+							</div>
+							<div class="flex items-center gap-2">
+								<input
+									type="text"
+									id="search-mis-expedientes"
+									placeholder="Buscar por carnet, nombre o No. expediente..."
+									class="px-3.5 py-2 text-xs rounded-lg border border-slate-300 bg-slate-50 focus:bg-white outline-none focus:ring-2 focus:ring-[#0f2744] w-72"
+								/>
+							</div>
+						</div>
+
+						<div class="overflow-x-auto">
+							<table class="min-w-full divide-y divide-slate-200 text-xs">
+								<thead class="bg-[#0f2744] text-white uppercase tracking-wider font-extrabold text-[10px]">
+									<tr>
+										<th class="px-3 py-3 text-left">No. Expediente</th>
+										<th class="px-3 py-3 text-left">Fecha</th>
+										<th class="px-3 py-3 text-left">Ciudadano / Municipio</th>
+										<th class="px-3 py-3 text-center">Competencia</th>
+										<th class="px-3 py-3 text-left">Materia</th>
+										<th class="px-3 py-3 text-center">Vuln.</th>
+										<th class="px-3 py-3 text-center">Estado</th>
+										<th class="px-3 py-3 text-center">Acciones</th>
+									</tr>
+								</thead>
+								<tbody id="tbody-mis-expedientes" class="divide-y divide-slate-200 font-medium">
+									<!-- Inyectado por JS -->
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</section>
+
+				<!-- ==================== PESTAÑA 3: BANDEJA DE AUDITORÍA (SOLO DIRECTORA) ==================== -->
+				<section id="tab-auditoria" class="tab-pane hidden space-y-6">
+					<!-- Métricas Rápidas Ministeriales -->
+					<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+						<div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-[#0f2744]">
+							<p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Total Radicados</p>
+							<h4 id="stat-total-atendidos" class="text-2xl font-black text-slate-900 mt-1">0</h4>
+						</div>
+						<div class="bg-amber-50/70 p-4 rounded-xl border border-amber-200 shadow-sm border-l-4 border-l-amber-600">
+							<p class="text-[10px] font-extrabold text-amber-800 uppercase tracking-widest">Pendientes de Dictamen</p>
+							<h4 id="stat-total-pendientes" class="text-2xl font-black text-amber-900 mt-1">0</h4>
+						</div>
+						<div class="bg-emerald-50/70 p-4 rounded-xl border border-emerald-200 shadow-sm border-l-4 border-l-emerald-600">
+							<p class="text-[10px] font-extrabold text-emerald-800 uppercase tracking-widest">Casos Resueltos</p>
+							<h4 id="stat-total-resueltos" class="text-2xl font-black text-emerald-900 mt-1">0</h4>
+						</div>
+						<div class="bg-slate-100 p-4 rounded-xl border border-slate-300 shadow-sm border-l-4 border-l-slate-600">
+							<p class="text-[10px] font-extrabold text-slate-600 uppercase tracking-widest">No Competentes</p>
+							<h4 id="stat-total-nocompete" class="text-2xl font-black text-slate-800 mt-1">0</h4>
+						</div>
+					</div>
+
+					<!-- Listado Provincial -->
+					<div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 space-y-4">
+						<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-200">
+							<div>
+								<h3 class="text-lg font-black text-slate-900">Control y Dictamen Institucional (Dirección Provincial)</h3>
+								<p class="text-xs text-slate-500">Supervisión jerárquica, asignación de Vía de Solución y calificación de cierre procesal</p>
+							</div>
+							<div class="flex items-center gap-2">
+								<select id="filter-auditoria-estado" class="px-3.5 py-1.5 text-xs rounded-lg border border-slate-300 bg-white font-semibold outline-none">
+									<option value="TODOS">Todos los Estados</option>
+									<option value="Pendiente">🟡 Solo Pendientes</option>
+									<option value="Resuelto">🟢 Solo Resueltos</option>
+									<option value="No Resuelto">🟠 Solo No Resueltos</option>
+									<option value="No Compete">⚪ Solo No Compete</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="overflow-x-auto">
+							<table class="min-w-full divide-y divide-slate-200 text-xs">
+								<thead class="bg-[#0f2744] text-white uppercase tracking-wider font-extrabold text-[10px]">
+									<tr>
+										<th class="px-3 py-3 text-left">No. Expediente</th>
+										<th class="px-3 py-3 text-left">Fecha</th>
+										<th class="px-3 py-3 text-left">Ciudadano / Municipio</th>
+										<th class="px-3 py-3 text-left">Materia / Vuln.</th>
+										<th class="px-3 py-3 text-left">Vía Dictaminada</th>
+										<th class="px-3 py-3 text-center">Estado</th>
+										<th class="px-3 py-3 text-center">Facultades de Dirección</th>
+									</tr>
+								</thead>
+								<tbody id="tbody-auditoria" class="divide-y divide-slate-200 font-medium">
+									<!-- Inyectado por JS -->
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</section>
+
+				<!-- ==================== PESTAÑA 4: MATRIZ ESTADÍSTICA (SOLO DIRECTORA) ==================== -->
+				<section id="tab-matriz" class="tab-pane hidden space-y-6">
+					<div class="bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+						<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
+							<div>
+								<div class="flex items-center gap-2">
+									<h3 class="text-xl font-black text-slate-900">Matriz Estadística Anual de Asesoría Jurídica</h3>
+									<span class="px-2.5 py-0.5 rounded text-[10px] font-extrabold bg-[#0f2744] text-white">Modelo 20 Columnas</span>
+								</div>
+								<p class="text-xs text-slate-500 mt-0.5">Tabulación provincial con balance mensual consolidado en tiempo real</p>
+							</div>
+							<div class="flex items-center gap-2">
+								<button
+									id="btn-seed-data"
+									class="px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition"
+								>
+									🔄 Restablecer Casos de Muestra
+								</button>
+							</div>
+						</div>
+
+						<!-- Validador Matemático Cruzado -->
+						<div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+							<div class="flex items-center justify-between">
+								<h4 class="text-xs font-extrabold uppercase tracking-wider text-[#0f2744] flex items-center gap-1.5">
+									<span>📐</span> Certificación de Consistencia Matemática (Auditoría Cruzada)
+								</h4>
+								<span id="math-audit-status" class="px-3 py-0.5 rounded-full text-[11px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
+									✓ Ecuaciones Cuadradas
+								</span>
+							</div>
+							<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-[11px] text-slate-700 font-mono">
+								<div class="bg-white p-2 rounded border border-slate-200">
+									<strong class="text-blue-900">Descarte:</strong> C₁ = C₂ + E₃ (Atendidos = Comp + NoComp)
+								</div>
+								<div class="bg-white p-2 rounded border border-slate-200">
+									<strong class="text-blue-900">Materias:</strong> C₂ = M₁ + M₂ + M₃ + M₄ + M₅
+								</div>
+								<div class="bg-white p-2 rounded border border-slate-200">
+									<strong class="text-blue-900">Vulnerab.:</strong> C₂ = V₁ + V₂ + V₃ + V₄ + V₅
+								</div>
+								<div class="bg-white p-2 rounded border border-slate-200">
+									<strong class="text-blue-900">Estados:</strong> C₁ = E₁ + E₂ + E₃
+								</div>
+							</div>
+						</div>
+
+						<!-- TABLA DE 20 COLUMNAS (DISEÑO INSTITUCIONAL MINISTERIAL) -->
+						<div class="overflow-x-auto shadow-sm rounded-lg border border-slate-300">
+							<table class="min-w-full text-center text-[11px] divide-y divide-slate-200 border-collapse">
+								<thead class="font-extrabold text-slate-900">
+									<!-- Fila Cabecera 1 -->
+									<tr class="bg-slate-200 text-[10px] uppercase tracking-wider">
+										<th rowspan="2" class="px-2 py-2 border-r border-slate-300 bg-slate-300 text-left font-black">Mes</th>
+										<th colspan="2" class="px-2 py-1.5 border-r border-slate-300 bg-blue-100 text-blue-950">Atención General</th>
+										<th colspan="5" class="px-2 py-1.5 border-r border-slate-300 bg-sky-100 text-sky-950">Materias Jurídicas Competentes</th>
+										<th colspan="5" class="px-2 py-1.5 border-r border-slate-300 bg-amber-100 text-amber-950">Vulnerabilidad Social</th>
+										<th colspan="3" class="px-2 py-1.5 border-r border-slate-300 bg-emerald-100 text-emerald-950">Estado de Casos</th>
+										<th colspan="4" class="px-2 py-1.5 bg-indigo-100 text-indigo-950">Vía Dictaminada</th>
+									</tr>
+									<!-- Fila Cabecera 2: 20 Columnas -->
+									<tr class="bg-slate-100 text-[10px] border-b border-slate-300">
+										<th class="px-1.5 py-2 font-black text-blue-950 bg-blue-50 border-r border-slate-200" title="Total Atendidos">Total (C₁)</th>
+										<th class="px-1.5 py-2 font-extrabold text-blue-800 bg-blue-50/50 border-r border-slate-300" title="Competentes">Comp (C₂)</th>
+										<th class="px-1.5 py-2 border-r border-slate-200">Civil</th>
+										<th class="px-1.5 py-2 border-r border-slate-200">Fam.</th>
+										<th class="px-1.5 py-2 border-r border-slate-200">Trab.</th>
+										<th class="px-1.5 py-2 border-r border-slate-200">Merc.</th>
+										<th class="px-1.5 py-2 border-r border-slate-300">Adm.</th>
+										<th class="px-1.5 py-2 border-r border-slate-200 font-mono font-bold">NNA</th>
+										<th class="px-1.5 py-2 border-r border-slate-200 font-mono font-bold">VVD</th>
+										<th class="px-1.5 py-2 border-r border-slate-200 font-mono font-bold">PAM</th>
+										<th class="px-1.5 py-2 border-r border-slate-200 font-mono font-bold">PSD</th>
+										<th class="px-1.5 py-2 border-r border-slate-300 font-mono font-bold">PJA</th>
+										<th class="px-1.5 py-2 border-r border-slate-200 text-emerald-800 font-bold">Res. (E₁)</th>
+										<th class="px-1.5 py-2 border-r border-slate-200 text-orange-800 font-bold">NoRes (E₂)</th>
+										<th class="px-1.5 py-2 border-r border-slate-300 text-slate-600 font-bold">NoComp (E₃)</th>
+										<th class="px-1.5 py-2 border-r border-slate-200">Judicial</th>
+										<th class="px-1.5 py-2 border-r border-slate-200">Notarial</th>
+										<th class="px-1.5 py-2 border-r border-slate-200">Adm.</th>
+										<th class="px-1.5 py-2">M. Alt.</th>
+									</tr>
+								</thead>
+								<tbody id="tbody-matriz" class="divide-y divide-slate-200 bg-white font-mono text-[11px]">
+									<!-- Inyectado por JS -->
+								</tbody>
+								<tfoot id="tfoot-matriz" class="bg-[#0f2744] text-white font-mono font-bold text-[11px]">
+									<!-- Inyectado por JS -->
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</section>
+
+			</main>
+		</div>
+
+		<!-- ==================== MODAL: VER FICHA (SOLO LECTURA PARA VENTANILLA) ==================== -->
+		<div id="modal-ver-ficha" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+			<div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden">
+				<div class="bg-[#0f2744] text-white px-6 py-4 flex items-center justify-between">
+					<div class="flex items-center gap-2">
+						<span class="text-lg">📄</span>
+						<div>
+							<h3 class="font-black text-sm" id="modal-ver-no-expediente">Ficha del Expediente</h3>
+							<p class="text-[10px] text-blue-200">Atención Ciudadana (Modo Solo Lectura Inmutable)</p>
+						</div>
+					</div>
+					<button type="button" id="btn-cerrar-ver-ficha" class="text-slate-300 hover:text-white text-lg font-bold">✕</button>
+				</div>
+
+				<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto text-xs">
+					<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+						<div>
+							<span class="text-slate-400 block text-[10px] uppercase font-bold">Fecha</span>
+							<span id="modal-ver-fecha" class="font-bold text-slate-800"></span>
+						</div>
+						<div>
+							<span class="text-slate-400 block text-[10px] uppercase font-bold">Municipio</span>
+							<span id="modal-ver-municipio" class="font-bold text-slate-800"></span>
+						</div>
+						<div>
+							<span class="text-slate-400 block text-[10px] uppercase font-bold">Responsable</span>
+							<span id="modal-ver-responsable" class="font-bold text-slate-800"></span>
+						</div>
+						<div>
+							<span class="text-slate-400 block text-[10px] uppercase font-bold">Estado</span>
+							<span id="modal-ver-estado" class="font-bold"></span>
+						</div>
+					</div>
+
+					<div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+						<span class="text-slate-400 block text-[10px] uppercase font-bold mb-0.5">Ciudadano Compareciente</span>
+						<p id="modal-ver-ciudadano" class="font-black text-slate-900 text-sm"></p>
+						<p id="modal-ver-ci" class="text-slate-600 font-mono text-xs"></p>
+					</div>
+
+					<div class="grid grid-cols-2 gap-3" id="modal-ver-box-clasif">
+						<div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+							<span class="text-slate-400 block text-[10px] uppercase font-bold">Materia</span>
+							<span id="modal-ver-materia" class="font-bold text-slate-800"></span>
+						</div>
+						<div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+							<span class="text-slate-400 block text-[10px] uppercase font-bold">Vulnerabilidad</span>
+							<span id="modal-ver-vuln" class="font-bold text-slate-800"></span>
+						</div>
+					</div>
+
+					<div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+						<span class="text-slate-400 block text-[10px] uppercase font-bold">Fundamentos y Narrativa de Hechos</span>
+						<p id="modal-ver-fundamentos" class="text-slate-800 leading-relaxed whitespace-pre-wrap"></p>
+					</div>
+
+					<!-- Si ya tiene vía de solución dictaminada por la dirección, se muestra como dato informativo de cierre -->
+					<div id="modal-ver-via-container" class="hidden p-3 bg-blue-50 rounded-xl border border-blue-200">
+						<span class="text-blue-900 block text-[10px] uppercase font-bold">Vía Dictaminada por la Dirección Provincial</span>
+						<span id="modal-ver-via" class="font-black text-blue-950 text-sm"></span>
+					</div>
+				</div>
+
+				<div class="bg-slate-100 px-6 py-3 border-t border-slate-200 flex justify-end">
+					<button type="button" id="btn-cerrar-ver-ficha-2" class="px-5 py-2 rounded-lg bg-[#0f2744] text-white text-xs font-bold hover:bg-[#16365c] transition">
+						Cerrar
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- ==================== MODAL: AUDITORÍA Y DICTAMEN (FACULTAD EXCLUSIVA DIRECTORA) ==================== -->
+		<div id="modal-auditoria" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+			<div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden">
+				<div class="bg-[#0f2744] text-white px-6 py-4 flex items-center justify-between">
+					<div class="flex items-center gap-2">
+						<span class="text-lg">⚖️</span>
+						<div>
+							<h3 class="font-black text-sm" id="modal-audit-title">Auditoría y Dictamen Provincial</h3>
+							<p class="text-[10px] text-blue-200">Facultad Jurisdiccional de la Dirección Provincial</p>
+						</div>
+					</div>
+					<button type="button" id="btn-cerrar-auditoria" class="text-slate-300 hover:text-white text-lg font-bold">✕</button>
+				</div>
+				
+				<form id="form-dictamen-auditoria" class="p-6 space-y-4 max-h-[75vh] overflow-y-auto text-xs">
+					<input type="hidden" id="audit-case-id" />
+
+					<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+						<div>
+							<span class="text-slate-400 block text-[10px] uppercase font-bold">Expediente</span>
+							<span id="audit-display-no" class="font-mono font-black text-blue-900"></span>
+						</div>
+						<div>
+							<span class="text-slate-400 block text-[10px] uppercase font-bold">Fecha</span>
+							<span id="audit-display-fecha" class="font-bold text-slate-800"></span>
+						</div>
+						<div>
+							<span class="text-slate-400 block text-[10px] uppercase font-bold">Municipio</span>
+							<span id="audit-display-municipio" class="font-bold text-slate-800"></span>
+						</div>
+						<div>
+							<span class="text-slate-400 block text-[10px] uppercase font-bold">Atendido Por</span>
+							<span id="audit-display-responsable" class="font-bold text-slate-800"></span>
+						</div>
+					</div>
+
+					<div class="space-y-1">
+						<label class="block text-[11px] font-bold text-slate-800 uppercase">
+							Rectificación de Hechos y Fundamentos (Corrección Ministerial)
+						</label>
+						<textarea
+							id="audit-edit-fundamentos"
+							rows="3"
+							required
+							class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-[#0f2744] outline-none leading-relaxed"
+						></textarea>
+					</div>
+
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="audit-box-clasificaciones">
+						<div>
+							<label class="block text-[11px] font-bold text-slate-800 uppercase mb-1">
+								Materia Jurídica
+							</label>
+							<select id="audit-edit-materia" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white font-medium">
+								<option value="Civil">Civil</option>
+								<option value="Familiar">Familiar</option>
+								<option value="Trabajo y Seguridad Social">Trabajo y Seguridad Social</option>
+								<option value="Mercantil">Mercantil</option>
+								<option value="Administrativo">Administrativo</option>
+							</select>
+						</div>
+
+						<div>
+							<label class="block text-[11px] font-bold text-slate-800 uppercase mb-1">
+								Vulnerabilidad Social
+							</label>
+							<select id="audit-edit-vuln" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white font-medium">
+								<option value="NNA">NNA - Niño, Niña o Adolescente</option>
+								<option value="VVD">VVD - Víctima Violencia/Discriminación</option>
+								<option value="PAM">PAM - Persona Adulto Mayor</option>
+								<option value="PSD">PSD - Persona con Discapacidad</option>
+								<option value="PJA">PJA - Persona Jurídico Ausente</option>
+							</select>
+						</div>
+					</div>
+
+					<!-- DICTAMEN DE DIRECCIÓN -->
+					<div class="bg-gradient-to-br from-blue-50 to-indigo-50/70 p-4 rounded-xl border border-blue-200 space-y-4">
+						<h4 class="text-xs font-black uppercase tracking-wider text-[#0f2744] flex items-center gap-1.5">
+							<span>⚖️</span> Dictamen Oficial de la Dirección Provincial
+						</h4>
+
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+							<div>
+								<label class="block text-[11px] font-bold text-slate-800 uppercase mb-1">
+									Asignar Vía de Solución <span class="text-rose-600">*</span>
+								</label>
+								<select id="audit-select-via" required class="w-full px-3 py-2 text-xs rounded-lg border border-blue-300 bg-white font-bold text-[#0f2744]">
+									<option value="">Seleccione Vía de Solución...</option>
+									<option value="Proceso Judicial">Proceso Judicial (Tribunales Populares)</option>
+									<option value="Notarial">Notarial (Notaría / Escrituras)</option>
+									<option value="Administrativo">Administrativo (Organismos de la Administración)</option>
+									<option value="Métodos Alternos">Métodos Alternos (Mediación / Conciliación)</option>
+								</select>
+							</div>
+
+							<div>
+								<label class="block text-[11px] font-bold text-slate-800 uppercase mb-1">
+									Calificación Procesal del Caso <span class="text-rose-600">*</span>
+								</label>
+								<select id="audit-select-estado" required class="w-full px-3 py-2 text-xs rounded-lg border border-blue-300 bg-white font-black text-slate-900">
+									<option value="Resuelto">🟢 Resuelto (Orientación Conforme)</option>
+									<option value="No Resuelto">🟠 No Resuelto (Trunco / Pendiente)</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="pt-3 flex items-center justify-between border-t border-slate-200">
+						<button
+							type="button"
+							id="btn-eliminar-caso"
+							class="px-3 py-2 rounded-lg text-rose-700 hover:bg-rose-50 border border-rose-200 font-bold text-xs flex items-center gap-1.5 transition"
+						>
+							<span>🗑️</span> Anular Expediente
+						</button>
+
+						<div class="flex items-center gap-2">
+							<button
+								type="button"
+								id="btn-cerrar-auditoria-2"
+								class="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-100 text-xs font-semibold transition"
+							>
+								Cancelar
+							</button>
+							<button
+								type="submit"
+								class="px-5 py-2.5 rounded-lg bg-[#0f2744] hover:bg-[#183c66] active:bg-[#0c1f36] text-white text-xs font-black uppercase tracking-wider shadow-md transition"
+							>
+								Emitir Dictamen
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<!-- NOTIFICADOR TOAST -->
+		<div id="toast" class="hidden fixed bottom-5 right-5 z-50 px-4 py-3 rounded-xl shadow-xl text-xs font-black text-white flex items-center gap-2 transition duration-300">
+			<span id="toast-icon">✓</span>
+			<span id="toast-msg">Operación completada</span>
+		</div>
+	</div>
+
+	<!-- ==================== LÓGICA DE NEGOCIO INTERACTIVA ==================== -->
+	<script is:inline>
+		// ==================== CASOS DE MUESTRA (CAMAGÜEY) ====================
+		const DEMO_CASES = [
+			{
+				id: 'EXP-2026-0001',
+				fecha: '2026-01-14',
+				responsable: 'Lic. Yaima Rodríguez',
+				ciudadano: 'María Elena Pérez Blanco',
+				ci: '74051209871',
+				municipio: 'Camagüey',
+				fundamentos: 'Comparece solicitando orientación para trámite de adjudicación de herencia de inmueble de su difunta madre. Presenta certificado de defunción y título de propiedad.',
+				competente: true,
+				materia: 'Civil',
+				vulnerabilidad: 'PAM',
+				via: 'Notarial',
+				estado: 'Resuelto'
+			},
+			{
+				id: 'EXP-2026-0002',
+				fecha: '2026-01-22',
+				responsable: 'Lic. Carlos Quintana',
+				ciudadano: 'Roberto Gómez Estrada',
+				ci: '88031523412',
+				municipio: 'Florida',
+				fundamentos: 'Refiere desavenencias con vecinos por ruidos y amenazas verbales reiteradas. Pide intervención policial y penal.',
+				competente: false,
+				materia: null,
+				vulnerabilidad: null,
+				via: null,
+				estado: 'No Compete'
+			},
+			{
+				id: 'EXP-2026-0003',
+				fecha: '2026-02-05',
+				responsable: 'Lic. Yaima Rodríguez',
+				ciudadano: 'Dayami Torres Betancourt',
+				ci: '96112034561',
+				municipio: 'Camagüey',
+				fundamentos: 'Madre de 2 menores que no recibe pensión alimenticia de su expareja hace 8 meses.',
+				competente: true,
+				materia: 'Familiar',
+				vulnerabilidad: 'NNA',
+				via: 'Proceso Judicial',
+				estado: 'Resuelto'
+			},
+			{
+				id: 'EXP-2026-0004',
+				fecha: '2026-02-18',
+				responsable: 'Lic. Carlos Quintana',
+				ciudadano: 'Jorge Luis Morales',
+				ci: '61070845123',
+				municipio: 'Nuevitas',
+				fundamentos: 'Inconformidad con resolución del INASS por denegación de pensión por invalidez tras peritaje médico.',
+				competente: true,
+				materia: 'Trabajo y Seguridad Social',
+				vulnerabilidad: 'PSD',
+				via: 'Administrativo',
+				estado: 'No Resuelto'
+			},
+			{
+				id: 'EXP-2026-0005',
+				fecha: '2026-03-02',
+				responsable: 'Lic. Yaima Rodríguez',
+				ciudadano: 'Ernesto Valdés Ramos (Socio MIPYME)',
+				ci: '85011943210',
+				municipio: 'Camagüey',
+				fundamentos: 'Consulta sobre rescisión de contrato de arrendamiento de local comercial y liquidación entre socios.',
+				competente: true,
+				materia: 'Mercantil',
+				vulnerabilidad: 'PAM',
+				via: 'Métodos Alternos',
+				estado: 'Resuelto'
+			},
+			{
+				id: 'EXP-2026-0006',
+				fecha: '2026-09-17',
+				responsable: 'Lic. Yaima Rodríguez',
+				ciudadano: 'Caridad del Risco Méndez',
+				ci: '72091456123',
+				municipio: 'Guáimaro',
+				fundamentos: 'Plantea que la vivienda que habita tiene al titular fallecido y sus herederos se encuentran en el exterior. Requiere regularización del título.',
+				competente: true,
+				materia: 'Civil',
+				vulnerabilidad: 'PJA',
+				via: null,
+				estado: 'Pendiente'
+			}
+		];
+
+		const STORAGE_KEY_CASES = 'web_justicia_cases_v2';
+		const STORAGE_KEY_AUTH = 'web_justicia_auth_v2';
+
+		// ==================== PERSISTENCIA ====================
+		function getStoredCases() {
+			const raw = localStorage.getItem(STORAGE_KEY_CASES);
+			if (!raw) {
+				localStorage.setItem(STORAGE_KEY_CASES, JSON.stringify(DEMO_CASES));
+				return DEMO_CASES;
+			}
+			return JSON.parse(raw);
+		}
+
+		function saveStoredCases(cases) {
+			localStorage.setItem(STORAGE_KEY_CASES, JSON.stringify(cases));
+			refreshAllViews();
+		}
+
+		function getAuthUser() {
+			const raw = localStorage.getItem(STORAGE_KEY_AUTH);
+			return raw ? JSON.parse(raw) : null;
+		}
+
+		function setAuthUser(user) {
+			if (user) {
+				localStorage.setItem(STORAGE_KEY_AUTH, JSON.stringify(user));
+			} else {
+				localStorage.removeItem(STORAGE_KEY_AUTH);
+			}
+		}
+
+		// ==================== ESTADO INTERACTIVO DEL FORMULARIO ====================
+		let isCompetente = true;
+		let selectedMateria = 'Civil';
+		let selectedVuln = 'PAM';
+
+		// ==================== INICIALIZACIÓN ====================
+		function initApp() {
+			// Mostrar fecha oficial
+			const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+			const fechaStr = new Date().toLocaleDateString('es-ES', options);
+			const fechaOficialEl = document.getElementById('fecha-oficial-hoy');
+			if (fechaOficialEl) {
+				fechaOficialEl.textContent = fechaStr.charAt(0).toUpperCase() + fechaStr.slice(1);
+			}
+
+			setupAuthHandlers();
+			setupNavHandlers();
+			setupFormSelectors();
+			setupFormSubmit();
+			setupModalHandlers();
+
+			const user = getAuthUser();
+			if (user) {
+				showDashboard(user);
+			} else {
+				showLogin();
+			}
+		}
+
+		function showLogin() {
+			document.getElementById('view-login').classList.remove('hidden');
+			document.getElementById('view-dashboard').classList.add('hidden');
+		}
+
+		function showDashboard(user) {
+			document.getElementById('view-login').classList.add('hidden');
+			document.getElementById('view-dashboard').classList.remove('hidden');
+
+			const roleBadge = document.getElementById('role-badge');
+			const userNameEl = document.getElementById('user-display-name');
+			const userRoleEl = document.getElementById('user-display-role');
+			const navAuditoria = document.getElementById('nav-tab-auditoria');
+			const navMatriz = document.getElementById('nav-tab-matriz');
+
+			userNameEl.textContent = user.name;
+			userRoleEl.textContent = user.roleDescription;
+
+			if (user.role === 'directora') {
+				roleBadge.textContent = 'Dirección Provincial';
+				roleBadge.className = 'px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wide bg-amber-400 text-slate-950';
+				navAuditoria.classList.remove('hidden');
+				navMatriz.classList.remove('hidden');
+				switchTab('tab-auditoria');
+			} else {
+				roleBadge.textContent = 'Atención Ciudadana (Ventanilla)';
+				roleBadge.className = 'px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wide bg-blue-600 text-white';
+				navAuditoria.classList.add('hidden');
+				navMatriz.classList.add('hidden');
+				switchTab('tab-registro');
+			}
+
+			document.getElementById('case-responsable').value = user.name;
+			refreshNextCaseNumber();
+			refreshAllViews();
+		}
+
+		function switchTab(tabId) {
+			document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+			const target = document.getElementById(tabId);
+			if (target) target.classList.remove('hidden');
+
+			document.querySelectorAll('.nav-tab').forEach(tab => {
+				if (tab.dataset.tab === tabId) {
+					tab.classList.add('bg-[#1a3a60]', 'text-white', 'shadow-sm');
+					tab.classList.remove('text-slate-300');
+				} else {
+					tab.classList.remove('bg-[#1a3a60]', 'text-white', 'shadow-sm');
+					tab.classList.add('text-slate-300');
+				}
+			});
+
+			if (tabId === 'tab-registro') {
+				refreshNextCaseNumber();
+			}
+		}
+
+		function refreshNextCaseNumber() {
+			const cases = getStoredCases();
+			const year = new Date().getFullYear();
+			const nextNum = String(cases.length + 1).padStart(4, '0');
+			document.getElementById('case-no').value = `EXP-${year}-${nextNum}`;
+			document.getElementById('case-date').value = new Date().toISOString().split('T')[0];
+		}
+
+		// ==================== AUTENTICACIÓN ====================
+		function setupAuthHandlers() {
+			const formLogin = document.getElementById('form-login');
+			const loginError = document.getElementById('login-error');
+
+			formLogin.addEventListener('submit', (e) => {
+				e.preventDefault();
+				const u = document.getElementById('login-username').value.trim().toLowerCase();
+				const p = document.getElementById('login-password').value.trim();
+
+				if (p !== 'ASDasd123') {
+					loginError.classList.remove('hidden');
+					return;
+				}
+
+				if (u === 'directora') {
+					loginError.classList.add('hidden');
+					const user = { role: 'directora', name: 'Dra. Mercedes Calunga', roleDescription: 'Directora Provincial de Justicia' };
+					setAuthUser(user);
+					showDashboard(user);
+					showToast('Sesión iniciada: Dirección Provincial de Camagüey');
+				} else if (u === 'personal' || u === 'ventanilla') {
+					loginError.classList.add('hidden');
+					const user = { role: 'personal', name: 'Lic. Yaima Rodríguez', roleDescription: 'Especialista de Ventanilla 1' };
+					setAuthUser(user);
+					showDashboard(user);
+					showToast('Sesión iniciada: Atención a la Ciudadanía');
+				} else {
+					loginError.classList.remove('hidden');
+				}
+			});
+
+			// Botones Demo
+			document.getElementById('btn-demo-directora').addEventListener('click', () => {
+				document.getElementById('login-username').value = 'Directora';
+				document.getElementById('login-password').value = 'ASDasd123';
+				formLogin.dispatchEvent(new Event('submit'));
+			});
+
+			document.getElementById('btn-demo-personal').addEventListener('click', () => {
+				document.getElementById('login-username').value = 'Personal';
+				document.getElementById('login-password').value = 'ASDasd123';
+				formLogin.dispatchEvent(new Event('submit'));
+			});
+
+			document.getElementById('btn-logout').addEventListener('click', () => {
+				setAuthUser(null);
+				showLogin();
+				showToast('Sesión cerrada');
+			});
+		}
+
+		function setupNavHandlers() {
+			document.querySelectorAll('.nav-tab').forEach(tab => {
+				tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+			});
+		}
+
+		// ==================== SELECTORES INTERACTIVOS Y BOTONES ====================
+		function setupFormSelectors() {
+			const btnSi = document.getElementById('btn-compete-si');
+			const btnNo = document.getElementById('btn-compete-no');
+			const secClasif = document.getElementById('seccion-clasificaciones');
+			const alertNoComp = document.getElementById('alert-no-compete');
+			const boxComp = document.getElementById('box-competencia');
+
+			// Selector Competente SÍ
+			btnSi.addEventListener('click', () => {
+				isCompetente = true;
+				btnSi.className = 'px-5 py-2 rounded-lg text-xs font-extrabold uppercase tracking-wide transition shadow-sm bg-[#15803d] text-white';
+				btnNo.className = 'px-5 py-2 rounded-lg text-xs font-extrabold uppercase tracking-wide transition text-slate-600 hover:text-slate-900';
+				secClasif.classList.remove('hidden');
+				alertNoComp.classList.add('hidden');
+				boxComp.className = 'p-5 rounded-xl border-2 transition duration-200 bg-slate-50 border-slate-300';
+			});
+
+			// Selector Competente NO
+			btnNo.addEventListener('click', () => {
+				isCompetente = false;
+				btnNo.className = 'px-5 py-2 rounded-lg text-xs font-extrabold uppercase tracking-wide transition shadow-sm bg-slate-800 text-white';
+				btnSi.className = 'px-5 py-2 rounded-lg text-xs font-extrabold uppercase tracking-wide transition text-slate-600 hover:text-slate-900';
+				secClasif.classList.add('hidden');
+				alertNoComp.classList.remove('hidden');
+				boxComp.className = 'p-5 rounded-xl border-2 transition duration-200 bg-amber-50/50 border-amber-300';
+			});
+
+			// Botones de Materia
+			const materiaBtns = document.querySelectorAll('.btn-materia-card');
+			materiaBtns.forEach(btn => {
+				btn.addEventListener('click', () => {
+					selectedMateria = btn.dataset.materia;
+					materiaBtns.forEach(b => {
+						if (b.dataset.materia === selectedMateria) {
+							b.className = 'btn-materia-card text-left p-3.5 rounded-xl border-2 transition flex flex-col justify-between h-full bg-[#0f2744] text-white border-[#0f2744] shadow-md';
+							const sub = b.querySelector('span:last-child');
+							if (sub) sub.className = 'text-[10px] text-blue-200 mt-1.5 leading-snug';
+						} else {
+							b.className = 'btn-materia-card text-left p-3.5 rounded-xl border-2 transition flex flex-col justify-between h-full bg-white text-slate-800 border-slate-200 hover:border-slate-400';
+							const sub = b.querySelector('span:last-child');
+							if (sub) sub.className = 'text-[10px] text-slate-500 mt-1.5 leading-snug';
+						}
+					});
+				});
+			});
+
+			// Botones de Vulnerabilidad
+			const vulnBtns = document.querySelectorAll('.btn-vuln-card');
+			vulnBtns.forEach(btn => {
+				btn.addEventListener('click', () => {
+					selectedVuln = btn.dataset.vuln;
+					vulnBtns.forEach(b => {
+						if (b.dataset.vuln === selectedVuln) {
+							b.className = 'btn-vuln-card text-left p-3 rounded-xl border-2 transition flex flex-col justify-between h-full bg-[#0f2744] text-white border-[#0f2744] shadow-md';
+							const title = b.querySelector('span.text-xs');
+							if (title) title.className = 'font-bold text-xs mt-1.5 text-white';
+							const tag = b.querySelector('span.font-mono');
+							if (tag) tag.className = 'font-mono font-black text-xs text-amber-200 bg-white/20 px-2 py-0.5 rounded';
+						} else {
+							b.className = 'btn-vuln-card text-left p-3 rounded-xl border-2 transition flex flex-col justify-between h-full bg-white text-slate-800 border-slate-200 hover:border-slate-400';
+							const title = b.querySelector('span.text-xs');
+							if (title) title.className = 'font-bold text-xs mt-1.5 text-slate-800';
+							const tag = b.querySelector('span.font-mono');
+							if (tag) tag.className = 'font-mono font-black text-xs text-blue-900 bg-blue-100 px-2 py-0.5 rounded';
+						}
+					});
+				});
+			});
+		}
+
+		// ==================== ENVÍO DEL FORMULARIO ====================
+		function setupFormSubmit() {
+			const form = document.getElementById('form-nuevo-expediente');
+
+			form.addEventListener('submit', (e) => {
+				e.preventDefault();
+
+				const noExp = document.getElementById('case-no').value;
+				const fecha = document.getElementById('case-date').value;
+				const responsable = document.getElementById('case-responsable').value.trim();
+				const ciudadano = document.getElementById('case-ciudadano-nombre').value.trim();
+				const ci = document.getElementById('case-ciudadano-ci').value.trim();
+				const municipio = document.getElementById('case-ciudadano-municipio').value;
+				const fundamentos = document.getElementById('case-fundamentos').value.trim();
+
+				if (!ciudadano || !ci || !municipio || !fundamentos) {
+					alert('Por favor complete todos los campos obligatorios del compareciente.');
+					return;
+				}
+
+				let materia = null;
+				let vuln = null;
+				let estado = 'No Compete';
+
+				if (isCompetente) {
+					materia = selectedMateria;
+					vuln = selectedVuln;
+					estado = 'Pendiente';
+				}
+
+				const newCase = {
+					id: noExp,
+					fecha,
+					responsable,
+					ciudadano,
+					ci,
+					municipio,
+					fundamentos,
+					competente: isCompetente,
+					materia,
+					vulnerabilidad: vuln,
+					via: null,
+					estado
+				};
+
+				const cases = getStoredCases();
+				cases.unshift(newCase);
+				saveStoredCases(cases);
+
+				// Limpiar
+				document.getElementById('case-ciudadano-nombre').value = '';
+				document.getElementById('case-ciudadano-ci').value = '';
+				document.getElementById('case-ciudadano-municipio').value = '';
+				document.getElementById('case-fundamentos').value = '';
+				document.getElementById('btn-compete-si').click();
+
+				refreshNextCaseNumber();
+				showToast(`Expediente ${noExp} radicado satisfactoriamente`);
+				switchTab('tab-expedientes');
+			});
+
+			// Filtros de búsqueda
+			document.getElementById('search-mis-expedientes').addEventListener('input', (e) => {
+				renderMisExpedientes(e.target.value.toLowerCase());
+			});
+
+			document.getElementById('filter-auditoria-estado').addEventListener('change', (e) => {
+				renderAuditoria(e.target.value);
+			});
+
+			// Cargar Datos Demo
+			document.getElementById('btn-seed-data').addEventListener('click', () => {
+				saveStoredCases(DEMO_CASES);
+				showToast('Casos de muestra restablecidos');
+			});
+		}
+
+		// ==================== MODALES ====================
+		function setupModalHandlers() {
+			// Modal Ver Ficha
+			const modalVer = document.getElementById('modal-ver-ficha');
+			const closeVer1 = document.getElementById('btn-cerrar-ver-ficha');
+			const closeVer2 = document.getElementById('btn-cerrar-ver-ficha-2');
+			[closeVer1, closeVer2].forEach(btn => btn.addEventListener('click', () => modalVer.classList.add('hidden')));
+
+			// Modal Auditoría
+			const modalAudit = document.getElementById('modal-auditoria');
+			const closeAudit1 = document.getElementById('btn-cerrar-auditoria');
+			const closeAudit2 = document.getElementById('btn-cerrar-auditoria-2');
+			[closeAudit1, closeAudit2].forEach(btn => btn.addEventListener('click', () => modalAudit.classList.add('hidden')));
+
+			// Formulario Auditoría y Dictamen
+			const formAudit = document.getElementById('form-dictamen-auditoria');
+			formAudit.addEventListener('submit', (e) => {
+				e.preventDefault();
+				const caseId = document.getElementById('audit-case-id').value;
+				const via = document.getElementById('audit-select-via').value;
+				const estado = document.getElementById('audit-select-estado').value;
+				const fund = document.getElementById('audit-edit-fundamentos').value.trim();
+				const mat = document.getElementById('audit-edit-materia').value;
+				const vuln = document.getElementById('audit-edit-vuln').value;
+
+				const cases = getStoredCases();
+				const idx = cases.findIndex(c => c.id === caseId);
+				if (idx !== -1) {
+					cases[idx].fundamentos = fund;
+					cases[idx].materia = mat;
+					cases[idx].vulnerabilidad = vuln;
+					cases[idx].via = via;
+					cases[idx].estado = estado;
+					saveStoredCases(cases);
+					modalAudit.classList.add('hidden');
+					showToast(`Dictamen emitido para expediente ${caseId}`);
+				}
+			});
+
+			// Anular Caso
+			document.getElementById('btn-eliminar-caso').addEventListener('click', () => {
+				const caseId = document.getElementById('audit-case-id').value;
+				const motivo = prompt('Escriba el motivo institucional obligatorio para anular el expediente:');
+				if (motivo && motivo.trim().length >= 5) {
+					let cases = getStoredCases();
+					cases = cases.filter(c => c.id !== caseId);
+					saveStoredCases(cases);
+					modalAudit.classList.add('hidden');
+					showToast(`Expediente ${caseId} anulado`);
+				} else if (motivo !== null) {
+					alert('Debe especificar un motivo válido de al menos 5 caracteres.');
+				}
+			});
+		}
+
+		function abrirFichaLectura(caseItem) {
+			document.getElementById('modal-ver-no-expediente').textContent = `Ficha: ${caseItem.id}`;
+			document.getElementById('modal-ver-fecha').textContent = caseItem.fecha;
+			document.getElementById('modal-ver-municipio').textContent = caseItem.municipio || 'Camagüey';
+			document.getElementById('modal-ver-responsable').textContent = caseItem.responsable;
+			
+			const estadoEl = document.getElementById('modal-ver-estado');
+			estadoEl.innerHTML = getStatusBadge(caseItem.estado);
+
+			document.getElementById('modal-ver-ciudadano').textContent = caseItem.ciudadano;
+			document.getElementById('modal-ver-ci').textContent = `Carnet de Identidad: ${caseItem.ci || '—'}`;
+
+			const boxClasif = document.getElementById('modal-ver-box-clasif');
+			if (!caseItem.competente) {
+				boxClasif.classList.add('hidden');
+			} else {
+				boxClasif.classList.remove('hidden');
+				document.getElementById('modal-ver-materia').textContent = caseItem.materia || '—';
+				document.getElementById('modal-ver-vuln').textContent = caseItem.vulnerabilidad || '—';
+			}
+
+			document.getElementById('modal-ver-fundamentos').textContent = caseItem.fundamentos;
+
+			const viaContainer = document.getElementById('modal-ver-via-container');
+			if (caseItem.via) {
+				viaContainer.classList.remove('hidden');
+				document.getElementById('modal-ver-via').textContent = caseItem.via;
+			} else {
+				viaContainer.classList.add('hidden');
+			}
+
+			document.getElementById('modal-ver-ficha').classList.remove('hidden');
+		}
+
+		function abrirAuditoriaDirectora(caseItem) {
+			document.getElementById('audit-case-id').value = caseItem.id;
+			document.getElementById('audit-display-no').textContent = caseItem.id;
+			document.getElementById('audit-display-fecha').textContent = caseItem.fecha;
+			document.getElementById('audit-display-municipio').textContent = caseItem.municipio || 'Camagüey';
+			document.getElementById('audit-display-responsable').textContent = caseItem.responsable;
+			document.getElementById('audit-edit-fundamentos').value = caseItem.fundamentos;
+
+			const boxClasif = document.getElementById('audit-box-clasificaciones');
+			if (!caseItem.competente) {
+				boxClasif.classList.add('hidden');
+			} else {
+				boxClasif.classList.remove('hidden');
+				document.getElementById('audit-edit-materia').value = caseItem.materia || 'Civil';
+				document.getElementById('audit-edit-vuln').value = caseItem.vulnerabilidad || 'PAM';
+			}
+
+			document.getElementById('audit-select-via').value = caseItem.via || '';
+			document.getElementById('audit-select-estado').value = (caseItem.estado === 'Pendiente' ? 'Resuelto' : caseItem.estado);
+
+			document.getElementById('modal-auditoria').classList.remove('hidden');
+		}
+
+		// ==================== RENDERIZADO DE TABLAS ====================
+		function refreshAllViews() {
+			const cases = getStoredCases();
+			renderMisExpedientes('');
+			renderAuditoria('TODOS');
+			renderMatriz(cases);
+			updateBadgesAndCounters(cases);
+		}
+
+		function getStatusBadge(estado) {
+			switch (estado) {
+				case 'Pendiente':
+					return '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-900 border border-amber-300">🟡 Pendiente</span>';
+				case 'Resuelto':
+					return '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-900 border border-emerald-300">🟢 Resuelto</span>';
+				case 'No Resuelto':
+					return '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-orange-100 text-orange-900 border border-orange-300">🟠 No Resuelto</span>';
+				case 'No Compete':
+					return '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-slate-200 text-slate-700 border border-slate-300">⚪ No Compete</span>';
+				default:
+					return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">${estado}</span>`;
+			}
+		}
+
+		function renderMisExpedientes(query) {
+			const tbody = document.getElementById('tbody-mis-expedientes');
+			const cases = getStoredCases();
+			tbody.innerHTML = '';
+
+			const filtered = cases.filter(c => {
+				if (!query) return true;
+				return (
+					c.id.toLowerCase().includes(query) ||
+					c.ciudadano.toLowerCase().includes(query) ||
+					(c.ci && c.ci.includes(query)) ||
+					(c.municipio && c.municipio.toLowerCase().includes(query))
+				);
+			});
+
+			if (filtered.length === 0) {
+				tbody.innerHTML = '<tr><td colspan="8" class="text-center py-6 text-slate-400">No se encontraron expedientes en el registro</td></tr>';
+				return;
+			}
+
+			filtered.forEach(c => {
+				const tr = document.createElement('tr');
+				tr.className = 'hover:bg-slate-50 transition';
+				tr.innerHTML = `
+					<td class="px-3 py-2.5 font-mono font-bold text-blue-900">${c.id}</td>
+					<td class="px-3 py-2.5 text-slate-600">${c.fecha}</td>
+					<td class="px-3 py-2.5">
+						<div class="font-bold text-slate-900">${c.ciudadano}</div>
+						<div class="text-[10px] text-slate-500 font-mono">${c.municipio || 'Camagüey'} • CI: ${c.ci || '—'}</div>
+					</td>
+					<td class="px-3 py-2.5 text-center font-black ${c.competente ? 'text-emerald-700' : 'text-slate-400'}">
+						${c.competente ? 'SÍ' : 'NO'}
+					</td>
+					<td class="px-3 py-2.5 font-semibold text-slate-700">${c.competente ? c.materia : '<span class="text-slate-400 italic">No Compete</span>'}</td>
+					<td class="px-3 py-2.5 text-center font-mono font-black text-blue-900">${c.competente ? (c.vulnerabilidad || '—') : '<span class="text-slate-400">—</span>'}</td>
+					<td class="px-3 py-2.5 text-center">${getStatusBadge(c.estado)}</td>
+					<td class="px-3 py-2.5 text-center">
+						<button type="button" class="btn-ver-caso px-3 py-1 rounded-lg bg-slate-100 hover:bg-[#0f2744] hover:text-white text-slate-800 font-bold text-[11px] border border-slate-300 transition">
+							👁️ Ver Ficha
+						</button>
+					</td>
+				`;
+				tr.querySelector('.btn-ver-caso').addEventListener('click', () => abrirFichaLectura(c));
+				tbody.appendChild(tr);
+			});
+		}
+
+		function renderAuditoria(filtroEstado) {
+			const tbody = document.getElementById('tbody-auditoria');
+			const cases = getStoredCases();
+			tbody.innerHTML = '';
+
+			const filtered = cases.filter(c => {
+				if (filtroEstado === 'TODOS') return true;
+				return c.estado === filtroEstado;
+			});
+
+			if (filtered.length === 0) {
+				tbody.innerHTML = '<tr><td colspan="7" class="text-center py-6 text-slate-400">No hay expedientes bajo este criterio de búsqueda</td></tr>';
+				return;
+			}
+
+			filtered.forEach(c => {
+				const tr = document.createElement('tr');
+				tr.className = 'hover:bg-slate-50 transition';
+				tr.innerHTML = `
+					<td class="px-3 py-2.5 font-mono font-bold text-blue-900">${c.id}</td>
+					<td class="px-3 py-2.5 text-slate-600">${c.fecha}</td>
+					<td class="px-3 py-2.5">
+						<div class="font-bold text-slate-900">${c.ciudadano}</div>
+						<div class="text-[10px] text-slate-500 font-mono">${c.municipio || 'Camagüey'} • Atendió: ${c.responsable}</div>
+					</td>
+					<td class="px-3 py-2.5">
+						${c.competente ? `<span class="font-bold text-slate-800">${c.materia}</span> <span class="font-mono text-blue-900 font-black text-[10px] bg-blue-100 px-1.5 py-0.5 rounded">(${c.vulnerabilidad})</span>` : '<span class="text-slate-400 italic">Descarte No Compete</span>'}
+					</td>
+					<td class="px-3 py-2.5 font-extrabold text-[#0f2744]">${c.via || '<span class="text-amber-700 italic font-medium">⚠️ Pendiente de Vía</span>'}</td>
+					<td class="px-3 py-2.5 text-center">${getStatusBadge(c.estado)}</td>
+					<td class="px-3 py-2.5 text-center">
+						<button type="button" class="btn-auditar px-3.5 py-1.5 rounded-lg bg-blue-50 hover:bg-[#0f2744] hover:text-white text-[#0f2744] font-black text-[11px] border border-blue-300 transition shadow-sm">
+							⚖️ Auditar / Dictaminar
+						</button>
+					</td>
+				`;
+				tr.querySelector('.btn-auditar').addEventListener('click', () => abrirAuditoriaDirectora(c));
+				tbody.appendChild(tr);
+			});
+		}
+
+		function updateBadgesAndCounters(cases) {
+			const pendientes = cases.filter(c => c.estado === 'Pendiente').length;
+			const resueltos = cases.filter(c => c.estado === 'Resuelto').length;
+			const noCompete = cases.filter(c => c.estado === 'No Compete').length;
+
+			document.getElementById('badge-pendientes-count').textContent = pendientes;
+			document.getElementById('stat-total-atendidos').textContent = cases.length;
+			document.getElementById('stat-total-pendientes').textContent = pendientes;
+			document.getElementById('stat-total-resueltos').textContent = resueltos;
+			document.getElementById('stat-total-nocompete').textContent = noCompete;
+		}
+
+		// ==================== CÁLCULO DE LA MATRIZ DE 20 COLUMNAS ====================
+		function renderMatriz(cases) {
+			const tbody = document.getElementById('tbody-matriz');
+			const tfoot = document.getElementById('tfoot-matriz');
+			tbody.innerHTML = '';
+			tfoot.innerHTML = '';
+
+			const meses = [
+				'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+				'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+			];
+
+			const matrix = meses.map((mes, idx) => ({
+				mes,
+				mesIndex: idx,
+				c1: 0, c2: 0,
+				m1: 0, m2: 0, m3: 0, m4: 0, m5: 0,
+				v1: 0, v2: 0, v3: 0, v4: 0, v5: 0,
+				e1: 0, e2: 0, e3: 0,
+				s1: 0, s2: 0, s3: 0, s4: 0
+			}));
+
+			const totalAnual = {
+				c1: 0, c2: 0,
+				m1: 0, m2: 0, m3: 0, m4: 0, m5: 0,
+				v1: 0, v2: 0, v3: 0, v4: 0, v5: 0,
+				e1: 0, e2: 0, e3: 0,
+				s1: 0, s2: 0, s3: 0, s4: 0
+			};
+
+			cases.forEach(c => {
+				const d = new Date(c.fecha);
+				let mIdx = isNaN(d.getMonth()) ? 8 : d.getMonth();
+				const row = matrix[mIdx];
+
+				row.c1++;
+				totalAnual.c1++;
+
+				if (c.competente) {
+					row.c2++;
+					totalAnual.c2++;
+
+					// Materias
+					if (c.materia === 'Civil') { row.m1++; totalAnual.m1++; }
+					else if (c.materia === 'Familiar') { row.m2++; totalAnual.m2++; }
+					else if (c.materia === 'Trabajo y Seguridad Social') { row.m3++; totalAnual.m3++; }
+					else if (c.materia === 'Mercantil') { row.m4++; totalAnual.m4++; }
+					else if (c.materia === 'Administrativo') { row.m5++; totalAnual.m5++; }
+
+					// Vulnerabilidades
+					if (c.vulnerabilidad === 'NNA') { row.v1++; totalAnual.v1++; }
+					else if (c.vulnerabilidad === 'VVD') { row.v2++; totalAnual.v2++; }
+					else if (c.vulnerabilidad === 'PAM') { row.v3++; totalAnual.v3++; }
+					else if (c.vulnerabilidad === 'PSD') { row.v4++; totalAnual.v4++; }
+					else if (c.vulnerabilidad === 'PJA') { row.v5++; totalAnual.v5++; }
+
+					// Vías
+					if (c.via === 'Proceso Judicial') { row.s1++; totalAnual.s1++; }
+					else if (c.via === 'Notarial') { row.s2++; totalAnual.s2++; }
+					else if (c.via === 'Administrativo') { row.s3++; totalAnual.s3++; }
+					else if (c.via === 'Métodos Alternos') { row.s4++; totalAnual.s4++; }
+				} else {
+					row.e3++;
+					totalAnual.e3++;
+				}
+
+				// Estados
+				if (c.estado === 'Resuelto') { row.e1++; totalAnual.e1++; }
+				else if (c.estado === 'No Resuelto') { row.e2++; totalAnual.e2++; }
+			});
+
+			matrix.forEach((r, idx) => {
+				const tr = document.createElement('tr');
+				tr.className = idx % 2 === 0 ? 'bg-white hover:bg-slate-50' : 'bg-slate-50/60 hover:bg-slate-100';
+				tr.innerHTML = `
+					<td class="px-2 py-1.5 font-sans font-extrabold text-slate-900 text-left border-r border-slate-300">${r.mes}</td>
+					<td class="px-1.5 py-1.5 font-black text-blue-950 bg-blue-50 border-r border-slate-200">${r.c1}</td>
+					<td class="px-1.5 py-1.5 font-extrabold text-blue-900 bg-blue-50/40 border-r border-slate-300">${r.c2}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-200">${r.m1}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-200">${r.m2}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-200">${r.m3}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-200">${r.m4}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-300">${r.m5}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-200 font-bold">${r.v1}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-200 font-bold">${r.v2}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-200 font-bold">${r.v3}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-200 font-bold">${r.v4}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-300 font-bold">${r.v5}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-200 text-emerald-800 font-black">${r.e1}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-200 text-orange-800 font-black">${r.e2}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-300 text-slate-600 font-black">${r.e3}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-200">${r.s1}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-200">${r.s2}</td>
+					<td class="px-1.5 py-1.5 border-r border-slate-200">${r.s3}</td>
+					<td class="px-1.5 py-1.5">${r.s4}</td>
+				`;
+				tbody.appendChild(tr);
+			});
+
+			tfoot.innerHTML = `
+				<tr>
+					<td class="px-2 py-2 font-sans font-black text-left border-r border-slate-700 bg-slate-950 text-white">TOTAL ANUAL</td>
+					<td class="px-1.5 py-2 font-black text-blue-200 border-r border-slate-700 bg-[#0d223a]">${totalAnual.c1}</td>
+					<td class="px-1.5 py-2 font-black text-blue-300 border-r border-slate-700 bg-[#0d223a]">${totalAnual.c2}</td>
+					<td class="px-1.5 py-2 border-r border-slate-800">${totalAnual.m1}</td>
+					<td class="px-1.5 py-2 border-r border-slate-800">${totalAnual.m2}</td>
+					<td class="px-1.5 py-2 border-r border-slate-800">${totalAnual.m3}</td>
+					<td class="px-1.5 py-2 border-r border-slate-800">${totalAnual.m4}</td>
+					<td class="px-1.5 py-2 border-r border-slate-700">${totalAnual.m5}</td>
+					<td class="px-1.5 py-2 border-r border-slate-800 text-amber-300 font-mono">${totalAnual.v1}</td>
+					<td class="px-1.5 py-2 border-r border-slate-800 text-amber-300 font-mono">${totalAnual.v2}</td>
+					<td class="px-1.5 py-2 border-r border-slate-800 text-amber-300 font-mono">${totalAnual.v3}</td>
+					<td class="px-1.5 py-2 border-r border-slate-800 text-amber-300 font-mono">${totalAnual.v4}</td>
+					<td class="px-1.5 py-2 border-r border-slate-700 text-amber-300 font-mono">${totalAnual.v5}</td>
+					<td class="px-1.5 py-2 border-r border-slate-800 text-emerald-300 font-black">${totalAnual.e1}</td>
+					<td class="px-1.5 py-2 border-r border-slate-800 text-orange-300 font-black">${totalAnual.e2}</td>
+					<td class="px-1.5 py-2 border-r border-slate-700 text-slate-300 font-black">${totalAnual.e3}</td>
+					<td class="px-1.5 py-2 border-r border-slate-800 text-blue-200">${totalAnual.s1}</td>
+					<td class="px-1.5 py-2 border-r border-slate-800 text-blue-200">${totalAnual.s2}</td>
+					<td class="px-1.5 py-2 border-r border-slate-800 text-blue-200">${totalAnual.s3}</td>
+					<td class="px-1.5 py-2 text-blue-200">${totalAnual.s4}</td>
+				</tr>
+			`;
+
+			const statusEl = document.getElementById('math-audit-status');
+			const eq1 = (totalAnual.c1 === totalAnual.c2 + totalAnual.e3);
+			const eq2 = (totalAnual.c2 === totalAnual.m1 + totalAnual.m2 + totalAnual.m3 + totalAnual.m4 + totalAnual.m5);
+			const eq3 = (totalAnual.c2 === totalAnual.v1 + totalAnual.v2 + totalAnual.v3 + totalAnual.v4 + totalAnual.v5);
+
+			if (eq1 && eq2 && eq3) {
+				statusEl.className = 'px-3 py-0.5 rounded-full text-[11px] font-black bg-emerald-100 text-emerald-900 border border-emerald-300';
+				statusEl.textContent = '✓ Todas las Ecuaciones Cuadran';
+			} else {
+				statusEl.className = 'px-3 py-0.5 rounded-full text-[11px] font-black bg-amber-100 text-amber-900 border border-amber-300';
+				statusEl.textContent = '⚠️ Casos Pendientes de Calificar';
+			}
+		}
+
+		// ==================== NOTIFICACIONES TOAST ====================
+		let toastTimer = null;
+		function showToast(msg, isSuccess = true) {
+			const toast = document.getElementById('toast');
+			const toastMsg = document.getElementById('toast-msg');
+			const toastIcon = document.getElementById('toast-icon');
+
+			toastMsg.textContent = msg;
+			toastIcon.textContent = isSuccess ? '✓' : 'ℹ️';
+			toast.className = `fixed bottom-5 right-5 z-50 px-4 py-3 rounded-xl shadow-xl text-xs font-black text-white flex items-center gap-2 transition duration-300 ${isSuccess ? 'bg-[#15803d]' : 'bg-slate-800'}`;
+			toast.classList.remove('hidden');
+
+			clearTimeout(toastTimer);
+			toastTimer = setTimeout(() => {
+				toast.classList.add('hidden');
+			}, 3000);
+		}
+
+		document.addEventListener('DOMContentLoaded', initApp);
+	</script>
+</Layout>

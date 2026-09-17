@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Taxonomía y Conformación del Expediente",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "viewBox": [1120, 680],
+    "views": [
+      {
+        "id": "clasificacion-completa",
+        "label": "Clasificación Socio-Jurídica Integral",
+        "focus": ["ingreso_caso", "filtro_competencia", "materias_juridicas", "vulnerabilidades", "vias_solucion", "estados_resolucion", "matriz_estadistica"],
+        "note": "Desglose de las 5 Materias y 5 Vulnerabilidades desde la entrada hasta la Matriz."
+      },
+      {
+        "id": "ruta-descarte",
+        "label": "Ruta de Descarte No Compete",
+        "focus": ["ingreso_caso", "filtro_competencia", "descarte_no_compete", "matriz_estadistica"],
+        "note": "Bloqueo automático de campos a NULL y cómputo exclusivo en Col 1 y Col 15."
+      },
+      {
+        "id": "dictamen-direccion",
+        "label": "Dictamen Institucional de Dirección",
+        "focus": ["materias_juridicas", "vias_solucion", "estados_resolucion", "matriz_estadistica"],
+        "note": "Asignación obligatoria de las 4 Vías de Solución y calificación del Estado."
+      }
+    ],
+    "output": "taxonomia_conformacion_expediente.html"
+  },
+  "stages": [
+    { "label": "Entrada (Ventanilla)" },
+    { "label": "Filtro de Jurisdicción" },
+    { "label": "Clasificación Jurídica" },
+    { "label": "Dictamen de Dirección" },
+    { "label": "Matriz Estadística" }
+  ],
+  "nodes": [
+    {
+      "id": "ingreso_caso",
+      "type": "frontend",
+      "label": "Captura de Fáctico",
+      "sublabel": "No. Exp + Fundamentos",
+      "stage": 0,
+      "row": 1,
+      "tag": "Regla RN-02"
+    },
+    {
+      "id": "filtro_competencia",
+      "type": "security",
+      "label": "¿Es Competente?",
+      "sublabel": "Jurisdicción MINJUS",
+      "stage": 1,
+      "row": 0,
+      "tag": "Decisión D-1"
+    },
+    {
+      "id": "descarte_no_compete",
+      "type": "backend",
+      "label": "Caso No Compete",
+      "sublabel": "Materia/Vía = NULL",
+      "stage": 1,
+      "row": 2,
+      "tag": "Regla RN-01"
+    },
+    {
+      "id": "materias_juridicas",
+      "type": "database",
+      "label": "5 Materias Jurídicas",
+      "sublabel": "Civil, Fam, Lab, Merc, Adm",
+      "stage": 2,
+      "row": 0,
+      "tag": "Cols 3 a 7"
+    },
+    {
+      "id": "vulnerabilidades",
+      "type": "database",
+      "label": "5 Vulnerabilidades",
+      "sublabel": "NNA, VVD, PAM, PSD, PJA",
+      "stage": 2,
+      "row": 2,
+      "tag": "Cols 8 a 12"
+    },
+    {
+      "id": "vias_solucion",
+      "type": "backend",
+      "label": "4 Vías de Solución",
+      "sublabel": "Judicial, Notarial, Admin, Alternos",
+      "stage": 3,
+      "row": 0,
+      "tag": "Cols 16 a 19"
+    },
+    {
+      "id": "estados_resolucion",
+      "type": "security",
+      "label": "Estado del Caso",
+      "sublabel": "Resuelto vs No Resuelto",
+      "stage": 3,
+      "row": 2,
+      "tag": "Cols 13 a 14"
+    },
+    {
+      "id": "matriz_estadistica",
+      "type": "database",
+      "label": "Matriz Provincial",
+      "sublabel": "20 Cols x 13 Filas",
+      "stage": 4,
+      "row": 1,
+      "tag": "Tiempo Real"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f_ingreso_filtro",
+      "from": "ingreso_caso",
+      "to": "filtro_competencia",
+      "label": "Evalúa jurisdicción",
+      "classification": "Fáctico",
+      "variant": "emphasis"
+    },
+    {
+      "id": "f_filtro_no",
+      "from": "filtro_competencia",
+      "to": "descarte_no_compete",
+      "label": "No compete",
+      "classification": "Descarte RN-01",
+      "variant": "security"
+    },
+    {
+      "id": "f_filtro_mat",
+      "from": "filtro_competencia",
+      "to": "materias_juridicas",
+      "label": "Sí compete (Materia)",
+      "classification": "Rama del Derecho",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "id": "f_filtro_vuln",
+      "from": "filtro_competencia",
+      "to": "vulnerabilidades",
+      "label": "Sí compete (Vulnerabilidad)",
+      "classification": "Condición Social",
+      "variant": "emphasis"
+    },
+    {
+      "id": "f_mat_via",
+      "from": "materias_juridicas",
+      "to": "vias_solucion",
+      "label": "Dictamina Vía",
+      "classification": "Solo Dirección",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "id": "f_vuln_est",
+      "from": "vulnerabilidades",
+      "to": "estados_resolucion",
+      "label": "Dictamina Estado",
+      "classification": "Solo Dirección",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "id": "f_descarte_matriz",
+      "from": "descarte_no_compete",
+      "to": "matriz_estadistica",
+      "label": "Cómputo No Compete",
+      "classification": "Col 1 y Col 15",
+      "variant": "dashed"
+    },
+    {
+      "id": "f_via_matriz",
+      "from": "vias_solucion",
+      "to": "matriz_estadistica",
+      "label": "Impacto Vías y Materias",
+      "classification": "Cols 3-7 y 16-19",
+      "variant": "emphasis"
+    },
+    {
+      "id": "f_est_matriz",
+      "from": "estados_resolucion",
+      "to": "matriz_estadistica",
+      "label": "Impacto Estados y Vuln",
+      "classification": "Cols 8-14",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Desglose de las 5 Materias Jurídicas",
+      "items": [
+        "Civil: Propiedad, sucesiones y contratos civiles ordinarios.",
+        "Familiar: Código de las Familias (alimentos, guarda, divorcio).",
+        "Trabajo y Seg. Social: Derechos laborales, pensiones e invalidez.",
+        "Mercantil: Nuevos actores (MIPYMES, CNA) y contratos comerciales.",
+        "Administrativo: Vivienda, Carné de Identidad, Planificación Física."
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Desglose de las 5 Vulnerabilidades (Siglas)",
+      "items": [
+        "NNA: Niño, Niña y Adolescente (< 18 años, derechos prioritarios).",
+        "VVD: Víctima de Violencia y Discriminación (género, intrafamiliar).",
+        "PAM: Persona Adulto Mayor (60 años o más en indefensión).",
+        "PSD: Persona en Situación de Discapacidad (física o intelectual).",
+        "PJA: Persona Jurídico Ausente (titular fuera del territorio nacional)."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Dictamen Institucional y Matriz Provincial",
+      "items": [
+        "4 Vías: Proceso Judicial, Notarial, Administrativo y Métodos Alternos.",
+        "3 Estados: Resuelto, No Resuelto y No Compete.",
+        "Cuadre inexpugnable: Total Casos = Total Competentes + No Compete."
+      ]
+    }
+  ]
+}
