@@ -11,6 +11,8 @@ Esta carpeta reúne de manera estructurada los documentos técnicos, ejecutivos 
 Web Justicia/
 └── documentacion/
     ├── README.md                                                 (Índice General)
+    ├── 07_Manual_Tecnico_Arquitectura_y_Mejoras_Implementadas.md (MANUAL TÉCNICO COMPLETO: PHP, SQLite, Dompdf, IR y Móvil v2.5)
+    ├── 06_Acuerdos_Finales_y_Manual_Tecnico_MVP.md              (MANUAL TÉCNICO Y ACUERDOS DEFINITIVOS v2.0)
     ├── 00_Requisitos_Funcionales_Web_Estadistica_Justicia.md    (ERS Oficial v1.0)
     ├── Documento_Definitivo_Sistema_Justicia.md                  (DOCUMENTO DEFINITIVO: INTERFACES, FLUJO Y MATRIZ)
     ├── 01_Presentacion_Reunion_Direccion.md                      (Síntesis Ejecutiva para la Reunión)

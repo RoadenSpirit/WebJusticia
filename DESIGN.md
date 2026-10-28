@@ -118,3 +118,27 @@ colors:
   4. **Estados:** Esmeralda suave (`#d1fae5`).
   5. **Vías Dictaminadas:** Violeta / Índigo suave (`#e0e7ff`).
 * Fila de **TOTAL ANUAL** al pie: Fondo azul ministerial supremo (`#0c2340`), números luminosos de alto contraste y comprobador de cuadre matemático en tiempo real.
+
+---
+
+## 5. Sistema de Adaptabilidad Móvil y Táctil (Skill Impeccable)
+
+Siguiendo las pautas de `reference/adapt.md` y `reference/craft-floor.md`:
+
+### A. Touch Targets y Ergonomía del Pulgar
+* **Área táctil mínima:** $\ge 42-44\,\text{px}$ en todos los botones, selectores y conmutadores.
+* **Prevención de Zoom Automático en iOS:** Todos los campos `<input>` y `<select>` cuentan con `text-base sm:text-sm` para impedir el zoom involuntario de Safari en iPhone.
+* **Safe-Area Insets:** Soporte completo de márgenes seguros para dispositivos con notch (`viewport-fit=cover`).
+
+### B. Dualidad Arquitectónica: Tablas Clásicas vs. Tarjetas Móviles
+* **Escritorio ($\ge 768\,\text{px}$):** Tablas de alta densidad de información para funcionarios que operan en terminales fijos con mouse.
+* **Móvil ($< 768\,\text{px}$):** Sustitución por tarjetas contextuales apiladas que desglosan:
+  * Número de expediente monoespaciado y fecha.
+  * Badge cromático de estado procesal (*Radicado*, *En Trámite*, *Concluido*).
+  * Ciudadano, municipio, materia jurídica y responsable asignado.
+  * Botones de acción táctiles directos con ancho y altura optimizados (`Gestionar`, `Editar`, `PDF`).
+
+### C. Navegación en la Matriz Estadística de 20 Columnas
+* **Columna "Mes" Congelada (`sticky left-0`):** Permite el desplazamiento horizontal fluido conservando en todo momento el mes como ancla visual a la izquierda con sombra sutil de elevación.
+* **Tarjetas Resumen de KPIs Ejecutivos:** 4 tarjetas superiores (*Total Atendidos*, *Competentes MINJUS*, *Casos Concluidos*, *Apto para Pago*) que resumen los indicadores provinciales sin forzar scroll en pantallas pequeñas.
+

@@ -10,12 +10,12 @@ const { title = "Web Estadística Justicia - Camagüey" } = Astro.props;
 <html lang="es">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
-	<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col font-sans">
+	<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col font-sans selection:bg-[#0c2340] selection:text-white">
 		<slot />
 	</body>
 </html>
@@ -23,5 +23,12 @@ const { title = "Web Estadística Justicia - Camagüey" } = Astro.props;
 <style is:global>
 	html {
 		scroll-behavior: smooth;
+		-webkit-tap-highlight-color: transparent;
+	}
+	body {
+		padding-top: env(safe-area-inset-top, 0px);
+		padding-bottom: env(safe-area-inset-bottom, 0px);
+		padding-left: env(safe-area-inset-left, 0px);
+		padding-right: env(safe-area-inset-right, 0px);
 	}
 </style>

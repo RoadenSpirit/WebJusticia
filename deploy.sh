@@ -10,8 +10,8 @@ TARGET_PATH="/home/your_ssh_user/domains/your-domain.com/public_html"
 echo "==> 1. Compilando proyecto Astro en estático..."
 npm run build
 
-echo "==> 2. Limpiando directorio remoto en Hostinger..."
-ssh -p $TARGET_PORT -o StrictHostKeyChecking=no $TARGET_USER@$TARGET_HOST "find $TARGET_PATH/ -mindepth 1 -delete"
+echo "==> 2. Limpiando directorio remoto en Hostinger (preservando carpeta api y base de datos SQLite)..."
+ssh -p $TARGET_PORT -o StrictHostKeyChecking=no $TARGET_USER@$TARGET_HOST "find $TARGET_PATH/ -mindepth 1 -not -path '*/api*' -delete"
 
 echo "==> 3. Subiendo archivos compilados (dist/*)..."
 scp -P $TARGET_PORT -r dist/* $TARGET_USER@$TARGET_HOST:$TARGET_PATH/
